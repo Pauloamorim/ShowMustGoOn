@@ -4,13 +4,21 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Converter;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import br.com.showMustGoOn.enums.SexoEnum;
+import br.com.showMustGoOn.enums.converter.SexoEnumConverter;
 
 @Table(name="musico")
 @Entity
@@ -38,7 +46,9 @@ public class Musico implements Serializable{
 	@Column(name="data_nascimento",nullable=false)
 	private Date dataNascimento;
 	
-	//TODO mapear enum sexo
+	@Convert(converter=SexoEnumConverter.class)
+	@Column(name="sexo",nullable=false)
+	private SexoEnum sexo;
 	
 	@Column(name="telefone1")
 	private String telefone1;
@@ -46,14 +56,13 @@ public class Musico implements Serializable{
 	@Column(name="telefone2")
 	private String telefone2;
 	
-	@Column(name="pais",nullable=false)
-	private String pais;
+	@ManyToOne
+	@JoinColumn(name="estado",nullable=false)
+	private Estado estado;
 	
-	@Column(name="estado",nullable=false)
-	private String estado;
-	
-	@Column(name="cidade",nullable=false)
-	private String cidade;
+	@ManyToOne
+	@JoinColumn(name="cidade",nullable=false)
+	private Cidade cidade;
 	
 	@Column(name="bairro",nullable=false)
 	private String bairro;
@@ -117,22 +126,16 @@ public class Musico implements Serializable{
 	public void setTelefone2(String telefone2) {
 		this.telefone2 = telefone2;
 	}
-	public String getPais() {
-		return pais;
-	}
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-	public String getEstado() {
+	public Estado getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
-	public String getCidade() {
+	public Cidade getCidade() {
 		return cidade;
 	}
-	public void setCidade(String cidade) {
+	public void setCidade(Cidade cidade) {
 		this.cidade = cidade;
 	}
 	public String getBairro() {
