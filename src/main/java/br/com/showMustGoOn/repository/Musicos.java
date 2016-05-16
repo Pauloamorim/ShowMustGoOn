@@ -6,6 +6,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+
+import br.com.showMustGoOn.DTO.MusicoDTO;
 import br.com.showMustGoOn.model.Musico;
 
 public class Musicos implements Serializable {

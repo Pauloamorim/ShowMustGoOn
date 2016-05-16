@@ -25,9 +25,10 @@ CREATE TABLE `musico` (
 );
 
 CREATE TABLE `funcao_musico` (
-    `cod_funcao` INTEGER NOT NULL,
+    `cod_funcao_musico` INTEGER NOT NULL,
+	`cod_funcao` INTEGER NOT NULL,
     `cod_musico` INTEGER NOT NULL,
-    PRIMARY KEY (`cod_funcao`, `cod_musico`)
+    PRIMARY KEY (`cod_funcao_musico`)
 );
 
 CREATE TABLE `funcao` (

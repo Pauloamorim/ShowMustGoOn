@@ -1,6 +1,7 @@
 package br.com.showMustGoOn.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +40,7 @@ public class ConsultarMusicosController implements Serializable {
 	@PostConstruct
 	public void init(){
 		setListaEstados(servico.listarEstados());
-		setListaMusicos(servico.listar());
+		setListaMusicos(new ArrayList<Musico>());
 		setListaFuncoes(servico.listarFuncoes());
 		setDto(new MusicoDTO());
 	}
@@ -54,7 +55,7 @@ public class ConsultarMusicosController implements Serializable {
 	
 	public void pesquisar(){
 		
-		setListaMusicos(null);
+		setListaMusicos(servico.listarMusicos(getDto()));
 		
 		if(getListaMusicos() == null || getListaMusicos().isEmpty()){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhum Registro encontrado", ""));

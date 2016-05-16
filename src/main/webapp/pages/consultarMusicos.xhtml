@@ -106,7 +106,7 @@
 					actionListener="#{consultarMusicosController.pesquisar}" 
 					value="Pesquisar"
 					id="botaoPesquisar" 
-					update="msgs"
+					update="msgs divTabela"
 					process="@form" 
 					icon="ui-icon-search" 
 					title="Pesquisar" />
@@ -123,29 +123,29 @@
 			</p:panel>
 			</div>
 			
-			
-			
-				
-			
-			<p:dataTable value="#{consultarMusicosController.listaMusicos}" var="musico"
-					emptyMessage="Nenhum músico cadastrado." rows="10" 
-					paginator="true" paginatorPosition="bottom"
-					style="margin-top: 50px" id="musicos-table">
-					
-				<p:column headerText="Exibir Perfil" width="5%" >
-					<p:graphicImage library="showMustGoOn/images" name="musico.png" style="center;"/>
-				</p:column>
-					
-				<p:column headerText="Nome" sortBy="#{musico.nome}">
-					<h:outputText value="#{musico.nome}" style="text-align: center !important;" />
-				</p:column>
-				<p:column headerText="Sobrenome" sortBy="#{musico.sobrenome}">
-					<h:outputText value="#{musico.sobrenome}" />
-				</p:column>
-				<p:column headerText="Estado" sortBy="#{musico.estado.nome}">
-					<h:outputText value="#{musico.estado.nome}" style="align:center;"/>
-				</p:column>
-			</p:dataTable>
+			<p:outputPanel id="divTabela">	
+				<p:outputPanel rendered="#{not empty consultarMusicosController.listaMusicos}">
+					<p:dataTable value="#{consultarMusicosController.listaMusicos}" var="musico"
+							emptyMessage="Nenhum músico cadastrado." rows="10" 
+							paginator="true" paginatorPosition="bottom"
+							style="margin-top: 50px" id="musicos-table">
+							
+						<p:column headerText="Exibir Perfil" width="5%" >
+							<p:graphicImage library="showMustGoOn/images" name="musico.png" style="center;"/>
+						</p:column>
+							
+						<p:column headerText="Nome" sortBy="#{musico.nome}">
+							<h:outputText value="#{musico.nome}" style="text-align: center !important;" />
+						</p:column>
+						<p:column headerText="Sobrenome" sortBy="#{musico.sobrenome}">
+							<h:outputText value="#{musico.sobrenome}" />
+						</p:column>
+						<p:column headerText="Estado" sortBy="#{musico.estado.nome}">
+							<h:outputText value="#{musico.estado.nome}" style="align:center;"/>
+						</p:column>
+					</p:dataTable>
+				</p:outputPanel>
+			</p:outputPanel>
 			
 		
 		</h:form>
