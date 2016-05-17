@@ -29,7 +29,7 @@
 						value="${consultarMusicosController.dto.nome}"
 						maxlength="100"
 						size="100"
-						placeholder="Nome músico"/>
+						placeholder="Nome ou Sobrenome do músico"/>
 				</p:panelGrid>
 				
 				<div class="clearfix"/>
@@ -39,7 +39,8 @@
 						effect="blind"
 						value="${consultarMusicosController.dto.estado}"
 						converter="SimpleEntityConverter"
-						style="margin-top:20px;">
+						style="margin-top:20px;"
+						onchange="resetarCidade()">
 						<p:ajax  
 							process="comboEstado" 
 							update="autoCompleteCidade comboEstado"/>
@@ -50,7 +51,8 @@
 							itemLabel="#{estado.nome}" 
 							itemValue="#{estado}" />
 					</p:selectOneMenu>
-					<p:autoComplete 
+
+						<p:autoComplete 
 						id="autoCompleteCidade"
 						value="#{consultarMusicosController.dto.cidade}" 
 						disabled="${consultarMusicosController.dto.estado == null}"
@@ -101,7 +103,7 @@
 		   					</p:selectManyCheckbox>
 						</p:panel>
 				</p:panelGrid>
-				<p:panelGrid columns="2" columnClasses="ui-grid-col-5" layout="grid" >
+				<p:panelGrid columns="3" columnClasses="ui-grid-col-5" layout="grid" >
 				<p:commandButton 
 					actionListener="#{consultarMusicosController.pesquisar}" 
 					value="Pesquisar"
@@ -119,10 +121,24 @@
 					title="Limpar Filtros" >
 					<p:resetInput target="panel" />
 				</p:commandButton>
+				<p:commandButton 
+					value="Limpar Resultados"
+					id="botaoLimparGrid"
+					actionListener="#{consultarMusicosController.limparGridResultados}"
+					update="divTabela"
+					process="@this" 
+					icon="ui-icon-trash" 
+					title="Limpar resultados retornados pela pesquisa" />
 				</p:panelGrid>
 			</p:panel>
 			</div>
-			
+
+			<p:remoteCommand name="resetarCidade" process="@this"
+				update="autoCompleteCidade">
+				<p:resetInput target="autoCompleteCidade" />
+			</p:remoteCommand>
+
+
 			<p:outputPanel id="divTabela">	
 				<p:outputPanel rendered="#{not empty consultarMusicosController.listaMusicos}">
 					<p:dataTable value="#{consultarMusicosController.listaMusicos}" var="musico"

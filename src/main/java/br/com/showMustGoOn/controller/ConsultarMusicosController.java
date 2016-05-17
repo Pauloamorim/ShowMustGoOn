@@ -12,6 +12,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 
 import br.com.showMustGoOn.DTO.MusicoDTO;
@@ -54,15 +55,48 @@ public class ConsultarMusicosController implements Serializable {
 	}
 	
 	public void pesquisar(){
-		
-		setListaMusicos(servico.listarMusicos(getDto()));
-		
-		if(getListaMusicos() == null || getListaMusicos().isEmpty()){
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhum Registro encontrado", ""));
+
+		if(verificarNenhumFiltroPreenchido()){
+			setListaMusicos(servico.listarMusicos(getDto()));
+			
+			if(getListaMusicos() == null || getListaMusicos().isEmpty()){
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhum Registro encontrado", ""));
+			}
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Favor preencher ao menos um filtro para a consulta", ""));
 		}
 		
-		getDto();
 	}
+	
+	private boolean verificarNenhumFiltroPreenchido() {
+		
+		Boolean filtroPreenchido = false;
+		
+		if(StringUtils.isNotBlank(getDto().getNome())){
+			filtroPreenchido = true;
+		}
+		if(getDto().getEstado() != null){
+			filtroPreenchido = true;
+		}
+		if(getDto().getCidade() != null){
+			filtroPreenchido = true;
+		}
+		if(getDto().getSexo() != null){
+			filtroPreenchido = true;
+		}
+		if(!getDto().getListaFuncoes().isEmpty()){
+			filtroPreenchido = true;
+		}
+		return filtroPreenchido;
+	}
+	
+	public void limparGridResultados(){
+		setListaMusicos(new ArrayList<Musico>());
+	}
+	
+	/////////////////////////////////////////////////
+	///////////////GETTERS AND SETTERS///////////////
+	/////////////////////////////////////////////////
 	
 	public MusicoDTO getDto() {
 		return dto;
