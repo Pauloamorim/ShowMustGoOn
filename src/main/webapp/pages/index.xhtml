@@ -5,31 +5,79 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	
+
+
 	<ui:define name="corpo">
-	<div class="ui-grid ui-grid-responsive">
-            <div class="ui-grid-row" align="center">
-                <div class="ui-grid-col-3">1</div>
-                <div class="ui-grid-col-3">1</div>
-                <div class="ui-grid-col-5">
-                
-                <h1>Quem Somos?</h1>
-                <p>
-                	Sua banda precisa de um integrante substituto? Ou um novo integrante permanente? 
-					Ou você é um musico que procura uma banda para tocar ou outro músico com quem possa fazer uma dupla
-					por exemplo ou até mesmo pessoas para montarem sua própia banda?
-					Se a resposta foi sim para uma das perguntas acima, você chegou no lugar certo!
-					O Show Must Go On chegou para ajudar os músicos e as pessoas que pretendem começar sua carreira musical, 
-					aqui você encontra músicos, bandas, cria contatos e parcerias que vão ajudar a alavancar sua carreira!
-					Está a procura daquele guitarrista talentoso que sua banda precisa para chegar ao topo? Aqui você o encontrará!
-					<br/>
-					Crie sua conta e encontre já quem você procura, porque o show tem que continuar!
-                </p>
-                
-                </div>
-            </div>
-        </div>
-	
+
+
+
+		<script type="text/javascript">
+			function handleLoginRequest(xhr, status, args) {
+				if (args.validationFailed || !args.logado) {
+					PF('dlg').jq.effect("shake", {
+						times : 5
+					}, 100);
+				} else {
+					PF('dlg').hide();
+					$('#loginLink').fadeOut();
+				}
+			}
+		</script>
+
+		<h:form>
+			<div class="ui-grid ui-grid-responsive">
+				<div class="ui-grid-row" align="center">
+					<div class="ui-grid-col-3">1</div>
+					<div class="ui-grid-col-3">
+						<h:outputLink value="javascript:void(0)"
+							onclick="PF('dlg').show();" title="login">
+							Ja possui cadastro? Entre agora.. 
+						</h:outputLink>
+
+						<p:dialog header="Login" widgetVar="dlg" resizable="false">
+							<p:messages id="growl" />
+							<h:panelGrid columns="2" cellpadding="5">
+								<h:outputLabel for="username" value="Email:" />
+								<p:inputText id="username" value="#{inicioController.login}"
+									required="true" requiredMessage="O campo Email não pode estar vazio"
+									 label="Login" />
+
+								<h:outputLabel for="password" value="Senha:" />
+								<p:password id="password" value="#{inicioController.senha}"
+									required="true" requiredMessage="O campo Senha não pode estar vazio"
+									label="Senha" />
+
+								<f:facet name="footer">
+									 <p:commandButton value="Logar" update="growl"
+										actionListener="#{inicioController.efetuarLogin}"
+										oncomplete="handleLoginRequest(xhr, status, args)" />
+								</f:facet>
+							</h:panelGrid>
+						</p:dialog>
+
+					</div>
+					<div class="ui-grid-col-5">
+
+						<h1>Quem Somos?</h1>
+						<p>
+							Sua banda precisa de um integrante substituto? Ou um novo
+							integrante permanente? Ou você é um musico que procura uma banda
+							para tocar ou outro músico com quem possa fazer uma dupla por
+							exemplo ou até mesmo pessoas para montarem sua própia banda? Se a
+							resposta foi sim para uma das perguntas acima, você chegou no
+							lugar certo! O Show Must Go On chegou para ajudar os músicos e as
+							pessoas que pretendem começar sua carreira musical, aqui você
+							encontra músicos, bandas, cria contatos e parcerias que vão
+							ajudar a alavancar sua carreira! Está a procura daquele
+							guitarrista talentoso que sua banda precisa para chegar ao topo?
+							Aqui você o encontrará! <br /> Crie sua conta e encontre já quem
+							você procura, porque o show tem que continuar!
+						</p>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
 	</ui:define>
 </ui:composition>
