@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import br.com.showMustGoOn.enums.SexoEnum;
 import br.com.showMustGoOn.enums.converter.SexoEnumConverter;
@@ -72,6 +73,9 @@ public class Musico implements Serializable{
 	
 	@Column(name="complemento")
 	private String complemento;
+	
+	@Transient
+	private String confirmarSenha;
 	
 	
 	/////////////////////////////////////////////////
@@ -155,6 +159,18 @@ public class Musico implements Serializable{
 	}
 	public void setComplemento(String complemento) {
 		this.complemento = complemento;
+	}
+	public SexoEnum getSexo() {
+		return sexo;
+	}
+	public void setSexo(SexoEnum sexo) {
+		this.sexo = sexo;
+	}
+	public String getConfirmarSenha() {
+		return confirmarSenha;
+	}
+	public void setConfirmarSenha(String confirmarSenha) {
+		this.confirmarSenha = confirmarSenha;
 	}
 	
 	

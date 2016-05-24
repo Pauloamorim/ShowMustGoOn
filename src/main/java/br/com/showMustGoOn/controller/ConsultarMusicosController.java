@@ -6,14 +6,12 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
 
 import br.com.showMustGoOn.DTO.MusicoDTO;
 import br.com.showMustGoOn.enums.SexoEnum;
@@ -25,7 +23,7 @@ import br.com.showMustGoOn.service.ConsultarMusicosService;
 
 @Named
 @ViewScoped
-public class ConsultarMusicosController implements Serializable {
+public class ConsultarMusicosController extends BaseController implements Serializable {
 	
 	
 	private static final long serialVersionUID = -7013843804976849864L;
@@ -44,10 +42,6 @@ public class ConsultarMusicosController implements Serializable {
 		setListaMusicos(new ArrayList<Musico>());
 		setListaFuncoes(servico.listarFuncoes());
 		setDto(new MusicoDTO());
-	}
-
-	public List<Musico> getListaMusicos() {
-		return listaMusicos;
 	}
 	
 	public List<Cidade> listarCidades(String cidade){
@@ -97,6 +91,10 @@ public class ConsultarMusicosController implements Serializable {
 	/////////////////////////////////////////////////
 	///////////////GETTERS AND SETTERS///////////////
 	/////////////////////////////////////////////////
+	
+	public List<Musico> getListaMusicos() {
+		return listaMusicos;
+	}
 	
 	public MusicoDTO getDto() {
 		return dto;

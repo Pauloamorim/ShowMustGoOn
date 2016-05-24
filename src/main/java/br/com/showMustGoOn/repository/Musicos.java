@@ -8,6 +8,9 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import br.com.showMustGoOn.DTO.MusicoDTO;
 import br.com.showMustGoOn.model.Musico;
@@ -25,6 +28,19 @@ public class Musicos implements Serializable {
 	
 	public List<Musico> todas() {
 		return manager.createQuery("from Musico", Musico.class).getResultList();
+	}
+
+	public Boolean verificarLogin(String email, String senha) {
+		
+		Session session = manager.unwrap(Session.class);
+		Criteria criteria = session.createCriteria(Musico.class);
+		criteria.add(Restrictions.eq("email", email));
+		criteria.add(Restrictions.eq("senha", senha));
+		
+		criteria.setProjection(Projections.rowCount());
+		
+		
+		return (Long)criteria.uniqueResult() > 0 ? true : false;
 	}
 
 }

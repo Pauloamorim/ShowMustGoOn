@@ -13,7 +13,11 @@
 		<script type="text/javascript">
 		
 		</script>
-	
+
+ 		<f:metadata>
+			<f:viewAction  action="#{consultarMusicosController.verificarLogado}" />
+		</f:metadata>
+
 		<h:form id="frm">
 	
 			<p:messages id="msgs" />
@@ -52,7 +56,7 @@
 							itemValue="#{estado}" />
 					</p:selectOneMenu>
 
-						<p:autoComplete 
+					<p:autoComplete 
 						id="autoCompleteCidade"
 						value="#{consultarMusicosController.dto.cidade}" 
 						disabled="${consultarMusicosController.dto.estado == null}"
