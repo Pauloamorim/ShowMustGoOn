@@ -5,11 +5,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.hibernate.HibernateException;
+
 import br.com.showMustGoOn.model.Cidade;
 import br.com.showMustGoOn.model.Estado;
+import br.com.showMustGoOn.model.Musico;
 import br.com.showMustGoOn.repository.CidadesRepository;
 import br.com.showMustGoOn.repository.Estados;
 import br.com.showMustGoOn.repository.Musicos;
+import br.com.showMustGoOn.util.Transacional;
 
 public class InicioService implements Serializable {
 
@@ -31,6 +35,22 @@ public class InicioService implements Serializable {
 
 	public List<Cidade> listarCidadesPorEstado(Integer codEstado, String cidade) {
 		return cidadeRepository.listarCidadesPorEstado(codEstado, cidade);
+	}
+
+	@Transacional
+	public void salvarMusico(Musico musico) throws Exception {
+		try{
+			validarEmailExistente(musico.getEmail());
+			musicosRepository.salvar(musico);
+		}catch(HibernateException he){
+			throw new Exception(he.getMessage());
+		}
+	}
+
+	private void validarEmailExistente(String email) {
+		if(musicosRepository.obterMusicoPorEmail(email) != null){
+			throw new HibernateException("O email informado já esta cadastrado! Informe outro email.");
+		}
 	}
 
 }

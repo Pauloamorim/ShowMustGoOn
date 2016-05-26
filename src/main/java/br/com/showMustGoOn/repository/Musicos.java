@@ -43,4 +43,16 @@ public class Musicos implements Serializable {
 		return (Long)criteria.uniqueResult() > 0 ? true : false;
 	}
 
+	public Musico obterMusicoPorEmail(String email) {
+		Session session = manager.unwrap(Session.class);
+		Criteria criteria = session.createCriteria(Musico.class);
+		criteria.add(Restrictions.eq("email", email));
+		return (Musico)criteria.uniqueResult();
+		
+	}
+
+	public void salvar(Musico musico) {
+		manager.merge(musico);
+	}
+
 }

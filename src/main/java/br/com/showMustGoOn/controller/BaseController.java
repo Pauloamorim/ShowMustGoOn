@@ -2,12 +2,14 @@ package br.com.showMustGoOn.controller;
 
 import java.io.Serializable;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
 @Named
-public abstract class BaseController implements Serializable {
+public  class BaseController implements Serializable {
 
 	private static final long serialVersionUID = 5595397590073552735L;
 	
@@ -19,6 +21,10 @@ public abstract class BaseController implements Serializable {
 			 return "/pages/index.xhtml?faces-redirect=true";
 		 }
 		 return null;
+	}
+	
+	public void adicionarMensagem(String mensagem,Severity severity){
+		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(severity, mensagem, ""));
 	}
 	
 

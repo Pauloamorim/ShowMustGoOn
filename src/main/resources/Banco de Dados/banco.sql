@@ -1,4 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
+CREATE DATABASE show_must_go_on;
 USE show_must_go_on;
 DROP TABLE IF EXISTS `musico`;
 DROP TABLE IF EXISTS `funcao_musico`;
@@ -6,7 +7,7 @@ DROP TABLE IF EXISTS `funcao`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `musico` (
-    `cod_musico` INTEGER NOT NULL,
+    `cod_musico` INTEGER NOT NULL AUTO_INCREMENT,
     `nome` TEXT NOT NULL,
     `sobrenome` TEXT NOT NULL,
     `email` TEXT NOT NULL,
@@ -25,7 +26,7 @@ CREATE TABLE `musico` (
 );
 
 CREATE TABLE `funcao_musico` (
-    `cod_funcao_musico` INTEGER NOT NULL,
+    `cod_funcao_musico` INTEGER NOT NULL AUTO_INCREMENT,
 	`cod_funcao` INTEGER NOT NULL,
     `cod_musico` INTEGER NOT NULL,
     PRIMARY KEY (`cod_funcao_musico`)
@@ -58,7 +59,7 @@ ALTER TABLE `cidade` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);
 ALTER TABLE `funcao_musico` ADD FOREIGN KEY (`cod_musico`) REFERENCES `musico`(`cod_musico`);
 ALTER TABLE `funcao_musico` ADD FOREIGN KEY (`cod_funcao`) REFERENCES `funcao`(`cod_funcao`);
 
-INSERT INTO 'funcao' VALUES
+INSERT INTO `funcao` VALUES
 (1,'Vocalista'),
 (2,'Baterista'),
 (3,'Guitarrista'),

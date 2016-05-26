@@ -32,5 +32,14 @@
 	<welcome-file-list>
 		<welcome-file>pages/index.xhtml</welcome-file>
 	</welcome-file-list>
+	
+	<filter>
+		<filter-name>FlashScopeFixerFilter</filter-name>
+		<filter-class>br.com.showMustGoOn.util.FlashScopeFixerFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>FlashScopeFixerFilter</filter-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</filter-mapping>
 
 </web-app>

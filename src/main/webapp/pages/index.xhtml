@@ -25,10 +25,12 @@
 		</script>
 
 
-		<h:form>
+		<h:form id="form">
 			<div class="ui-grid ui-grid-responsive">
 				<div class="ui-grid-row" align="center">
 					<div class="ui-grid-col-5">
+					
+					<p:outputPanel id="panelCadastro">
 					
 					<p:focus for="nomeCadastro"/>
 					<p:messages id="msgs" closable="true"/>
@@ -53,6 +55,7 @@
 					
 					<p:inputText value="#{inicioController.musico.email}"
 									placeholder="Email"
+									id="email"
 									required="true"
 									requiredMessage="O campo Email não pode ser vazio."
 									size="64"/>
@@ -65,24 +68,27 @@
 									placeholder="Senha"
 									size="30"
 									id="senha"
+									match="confirmarSenha"
 									feedback="true"
-									/>
+									validatorMessage="Os campos de senha não coincidem."/>
 									
 					<p:password value="#{inicioController.musico.confirmarSenha}"
+									id="confirmarSenha"
 									required="true"
 									requiredMessage="O campo Confirmar Senha não pode ser vazio."
 									placeholder="Confirmar Senha"
 									style="margin-left : 15px;"
 									size="30"
-									match="senha"
+									
 									feedback="true"
-									validatorMessage="Os campos de senha não coincidem."/>
+									/>
 									
 					<div class="clearfix delta10" />
 									
 					<p:calendar value="#{inicioController.musico.dataNascimento}"
 									effect="fold"
 									mask="99/99/9999"
+									pattern="dd/MM/yyyy"
 									required="true"
 									requiredMessage="O campo Data Nascimento não pode ser vazio." 
 									placeholder="Data Nascimento"
@@ -184,20 +190,24 @@
 					
 					<p:inputText value="#{inicioController.musico.complemento}"
 									placeholder="Complemento" 
-									required="true" 
+									required="true"
+									id="complemento"
 									requiredMessage="O campo Complemento não pode ser vazio."
 									size="64" />
 					<div class="clearfix delta10" />
 					
+					
 					<!-- Botão Cadastrar -->
 					<p:commandButton
-						ajax="false"
-						action="#{inicioController.salvar}"
-						validateClient="true"
-						update="msgs"
+						actionListener="#{inicioController.salvar}"
+						partialSubmit="true"
+						process="panelCadastro"
+						update="msgs panelCadastro"
 						value="Cadastrar"
 						icon="fa-plus-square"/>
-					
+
+					</p:outputPanel>
+					<p:outputPanel id="panelLogin">
 
 					<!-- LOGIN AREA -->
 					<h:outputLink value="javascript:void(0)"
@@ -210,7 +220,7 @@
 							<h:panelGrid columns="2" cellpadding="5">
 								<h:outputLabel for="username" value="Email:" />
 								<p:inputText id="username" value="#{inicioController.login}"
-									required="true" requiredMessage="O campo Email não pode estar vazio"
+									required="true"  requiredMessage="O campo Email não pode estar vazio"
 									 label="Login" />
 
 								<h:outputLabel for="password" value="Senha:" />
@@ -221,13 +231,15 @@
 								<f:facet name="footer">
 									 <p:commandButton value="Logar" update="growl"
 										actionListener="#{inicioController.efetuarLogin}"
+										partialSubmit="true"
+										process="panelLogin"
 										oncomplete="handleLoginRequest(xhr, status, args)" />
 								</f:facet>
 							</h:panelGrid>
 						</p:dialog>
 						<!-- END LOGIN -->
-					
-					
+						
+					</p:outputPanel>
 					
 					</div>
 					<div class="ui-grid-col-5">
