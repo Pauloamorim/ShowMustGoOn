@@ -3,6 +3,10 @@ package br.com.showMustGoOn.DTO;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Transient;
+
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.showMustGoOn.enums.SexoEnum;
 import br.com.showMustGoOn.model.Cidade;
 import br.com.showMustGoOn.model.Estado;
@@ -16,6 +20,19 @@ public class MusicoDTO implements Serializable {
 	private Estado estado;
 	private SexoEnum sexo;
 	private List<Funcao> listaFuncoes;
+	
+	@Transient
+	public String getFuncoesFormatadas(){
+		String retorno = StringUtils.EMPTY;
+		if(getListaFuncoes() == null || getListaFuncoes().isEmpty()){
+			return retorno;
+		}
+		for (Funcao funcao : getListaFuncoes()) {
+			retorno.concat(funcao.getDescricaoFuncao().concat(", "));
+		}
+		StringUtils.removeEnd(retorno, ",");
+		return retorno;
+	}
 	
 	/////////////////////////////////////////////////
 	///////////////GETTERS AND SETTERS///////////////

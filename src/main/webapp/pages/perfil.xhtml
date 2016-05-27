@@ -1,0 +1,266 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:showMustGoOn="http://java.sun.com/jsf/composite/showMustGoOn/components">
+
+
+	<ui:define name="corpo">
+
+		<f:metadata>
+			<f:viewAction action="#{perfilController.verificarLogado}"  />
+		</f:metadata>
+
+		<showMustGoOn:menu />
+
+		<h1 align="center">Meu Perfil</h1>
+		<h:form id="form">
+			<p:messages id="msgs" closable="true"/>
+			<p:tabView orientation="left">
+				<p:tab title="Dados Básicos">
+					<h:panelGrid columns="2" cellpadding="10">
+						
+						
+						<p:outputPanel id="panelCadastro" >
+						
+						<p:focus for="nomeCadastro"/>
+						
+						
+						<p:inputText value="#{perfilController.musico.nome}" 
+										placeholder="Nome"
+										required="true"
+										requiredMessage="O campo Nome não pode ser vazio."
+										size="30"
+										id="nomeCadastro"/>
+						<p:inputText value="#{perfilController.musico.sobrenome}" 
+										placeholder="SobreNome"
+										style="margin-left : 15px;"
+										required="true"
+										requiredMessage="O campo SobreNome não pode ser vazio."
+										size="30"/>
+										
+						
+						<div class="clearfix delta10" />
+						
+						<p:inputText value="#{perfilController.musico.email}"
+										placeholder="Email"
+										id="email"
+										required="true"
+										requiredMessage="O campo Email não pode ser vazio."
+										size="64"/>
+										
+						<div class="clearfix delta10" />
+						
+						<p:password value="#{perfilController.musico.senha}"
+										required="true"
+										requiredMessage="O campo Senha não pode ser vazio."
+										placeholder="Alterar Senha"
+										size="30"
+										id="senha"
+										match="confirmarSenha"
+										weakLabel="Fraca"
+										goodLabel="Boa"
+										strongLabel="Eita, cabulosa"
+										feedback="true"
+										validatorMessage="Os campos de senha não coincidem."/>
+										
+						<p:password value="#{perfilController.musico.confirmarSenha}"
+										id="confirmarSenha"
+										required="true"
+										requiredMessage="O campo Confirmar Senha não pode ser vazio."
+										placeholder="Confirmar Senha"
+										style="margin-left : 15px;"
+										size="30"
+										weakLabel="Fraca"
+										goodLabel="Boa"
+										strongLabel="Eita, cabulosa"
+										feedback="true"/>
+										
+						<div class="clearfix delta10" />
+										
+						<p:calendar value="#{perfilController.musico.dataNascimento}"
+										effect="fold"
+										mask="99/99/9999"
+										pattern="dd/MM/yyyy"
+										required="true"
+										requiredMessage="O campo Data Nascimento não pode ser vazio." 
+										placeholder="Data Nascimento"
+										navigator="true"
+										yearRange="c-100:c"/>	
+										
+						<p:selectOneMenu
+							id="comboSexo"
+							effect="blind"
+							value="${perfilController.musico.sexo}"
+							required="true"
+							requiredMessage="O campo Sexo não pode ser vazio."
+							style="width:150px; margin-left:15px;">
+							<f:selectItem itemLabel="Selecione o sexo..." itemValue="" />
+							<f:selectItems 
+								value="#{inicioController.listaSexo}" 
+								var="sexo" 
+								itemLabel="#{sexo.descricao}" 
+								itemValue="#{estado}" />
+						</p:selectOneMenu>								
+						
+						<div class="clearfix delta10" />
+						
+						<p:inputMask mask="(99)9999-9999"
+										placeholder="Telefone Fixo"
+										value="#{perfilController.musico.telefone1}"
+										size="30"/>
+										
+						<p:inputMask mask="(99)99999-9999"
+										placeholder="Telefone Celular"
+										value="#{perfilController.musico.telefone2}"
+										size="30"
+										style="margin-left:15px"/>									
+						
+						<div class="clearfix delta10" />
+						
+						<p:selectOneMenu
+							id="comboEstado"
+							effect="blind"
+							value="${perfilController.musico.estado}"
+							converter="SimpleEntityConverter"
+							onchange="resetarCidade()"
+							required="true"
+							requiredMessage="O campo Estado não pode ser vazio.">
+							<p:ajax  
+								process="comboEstado" 
+								update="autoCompleteCidade comboEstado"/>
+							<f:selectItem itemLabel="Selecione o estado..." itemValue="" />
+							<f:selectItems 
+								value="#{inicioController.listaEstados}" 
+								var="estado" 
+								itemLabel="#{estado.nome}" 
+								itemValue="#{estado}" />
+						</p:selectOneMenu>
+	
+						<p:remoteCommand name="resetarCidade" process="@this"
+							update="autoCompleteCidade">
+							<p:resetInput target="autoCompleteCidade" />
+						</p:remoteCommand>
+						
+						
+						<p:autoComplete 
+							id="autoCompleteCidade"
+							value="#{perfilController.musico.cidade}" 
+							disabled="${perfilController.musico.estado == null}"
+							placeholder="Selecione a cidade..." 
+							size="40"
+							maxResults="7"
+							required="true"
+							requiredMessage="O campo Cidade não pode ser vazio."
+							style="margin-left:15px;"
+							completeMethod="#{inicioController.listarCidades}"
+							converter="SimpleEntityConverter"
+							effect="fade"
+							minQueryLength="3"
+							var="cidade"
+							itemValue="${cidade}"
+							itemLabel="${cidade.nome}">
+						</p:autoComplete>					
+	
+	
+						<div class="clearfix delta10" />
+	
+						<p:inputText value="#{perfilController.musico.bairro}"
+										placeholder="Bairro" 
+										required="true" 
+										requiredMessage="O campo Bairro não pode ser vazio."
+										size="64" />
+							
+						<div class="clearfix delta10" />
+						
+						<p:inputText value="#{perfilController.musico.rua}"
+										placeholder="Rua" 
+										required="true" 
+										requiredMessage="O campo Rua não pode ser vazio."
+										size="64" />
+															
+						<div class="clearfix delta10" />
+						
+						<p:inputText value="#{perfilController.musico.complemento}"
+										placeholder="Complemento" 
+										required="true"
+										id="complemento"
+										requiredMessage="O campo Complemento não pode ser vazio."
+										size="64" />
+						<div class="clearfix delta10" />
+						<div align="center">
+							<p:commandButton
+							actionListener="#{perfilController.salvar}"
+							update="form:msgs @form"
+							value="Alterar"
+							icon="fa fa-plus-square"/>
+							
+							<p:commandButton value="Voltar" 
+							ajax="false" 
+							immediate="true"
+							action="principal.xhtml?faces-redirect=true" 
+							style="width:70px"/>
+						</div>
+						
+						</p:outputPanel>
+					
+						
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Habilidades Musicais">
+					<h:panelGrid columns="1" cellpadding="10">
+					
+								<p:panel id="toggleable"
+								 header="Qualificações" 
+								 toggleable="true"
+								 toggleSpeed="500"
+								 widgetVar="panel" 
+								 style="margin-bottom:20px;margin-top:20px;">
+									<p:selectManyCheckbox id="opcoesFuncoes" 
+										value="#{perfilController.listaFuncoesSelecionadas}" 
+										layout="grid" 
+										converter="SimpleEntityConverter"
+										columns="10">
+				       					<f:selectItems 
+				       						 value="#{perfilController.listaFuncoes}"
+				       						 var="funcao" 
+				       						 itemLabel="#{funcao.descricaoFuncao}" 
+				       						 itemValue="#{funcao}" />
+				   					</p:selectManyCheckbox>
+								</p:panel>
+					
+					
+					</h:panelGrid>
+							<p:commandButton
+							actionListener="#{perfilController.salvar}"
+							update="form:msgs @form"
+							value="Alterar"
+							icon="fa fa-plus-square"/>
+							
+							<p:commandButton value="Voltar" 
+							ajax="false" 
+							immediate="true"
+							action="principal.xhtml?faces-redirect=true" 
+							style="width:70px"/>
+				</p:tab>
+				<p:tab title="Minhas Bandas">
+				
+					<p:commandButton value="Criar minha banda." 
+						ajax="false" 
+						immediate="true"
+						action="cadastrarBanda.xhtml?faces-redirect=true" 
+						style="width:300px"/>
+				
+				</p:tab>
+			</p:tabView>
+			<div align="center">
+
+			</div>
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

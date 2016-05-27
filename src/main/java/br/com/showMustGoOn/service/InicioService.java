@@ -48,7 +48,7 @@ public class InicioService implements Serializable {
 	}
 
 	private void validarEmailExistente(String email) {
-		if(musicosRepository.obterMusicoPorEmail(email) != null){
+		if(musicosRepository.obterMusicoPorEmail(email,null) != null){
 			throw new HibernateException("O email informado já esta cadastrado! Informe outro email.");
 		}
 	}

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 
 import br.com.showMustGoOn.model.Estado;
 import br.com.showMustGoOn.model.Funcao;
+import br.com.showMustGoOn.model.FuncaoMusico;
 
 public class FuncoesRepository implements Serializable {
 
@@ -22,5 +23,6 @@ public class FuncoesRepository implements Serializable {
 	public List<Funcao> todas() {
 		return manager.createQuery("from Funcao", Funcao.class).getResultList();
 	}
+
 	
 }

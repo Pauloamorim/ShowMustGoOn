@@ -70,6 +70,9 @@
 									id="senha"
 									match="confirmarSenha"
 									feedback="true"
+									weakLabel="Fraca"
+									goodLabel="Boa"
+									strongLabel="Eita, cabulosa"
 									validatorMessage="Os campos de senha não coincidem."/>
 									
 					<p:password value="#{inicioController.musico.confirmarSenha}"
@@ -78,6 +81,9 @@
 									requiredMessage="O campo Confirmar Senha não pode ser vazio."
 									placeholder="Confirmar Senha"
 									style="margin-left : 15px;"
+									weakLabel="Fraca"
+									goodLabel="Boa"
+									strongLabel="Eita, cabulosa"
 									size="30"
 									
 									feedback="true"
@@ -204,7 +210,7 @@
 						process="panelCadastro"
 						update="msgs panelCadastro"
 						value="Cadastrar"
-						icon="fa-plus-square"/>
+						icon="fa fa-plus-square"/>
 
 					</p:outputPanel>
 					<p:outputPanel id="panelLogin">

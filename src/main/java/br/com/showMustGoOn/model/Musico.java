@@ -18,12 +18,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
+import br.com.showMustGoOn.converter.BaseEntity;
 import br.com.showMustGoOn.enums.SexoEnum;
 import br.com.showMustGoOn.enums.converter.SexoEnumConverter;
 
 @Table(name="musico")
 @Entity
-public class Musico implements Serializable{
+public class Musico  implements Serializable,BaseEntity{
 
 	private static final long serialVersionUID = -5720713929816252592L;
 	@Id
@@ -76,6 +79,12 @@ public class Musico implements Serializable{
 	
 	@Transient
 	private String confirmarSenha;
+	
+	@Transient
+	public String getNomeSobrenomeEstadoCidadeMusico(){
+		if(getEstado() == null || getCidade() == null){return StringUtils.EMPTY;}
+		return getNome().concat(" ").concat(getSobrenome()).concat(" - ").concat(getCidade().getNome()).concat(" - ").concat(getEstado().getNome());
+	}
 	
 	
 	/////////////////////////////////////////////////
@@ -171,6 +180,12 @@ public class Musico implements Serializable{
 	}
 	public void setConfirmarSenha(String confirmarSenha) {
 		this.confirmarSenha = confirmarSenha;
+	}
+
+
+	@Override
+	public Integer getId() {
+		return getCodMusico();
 	}
 	
 	

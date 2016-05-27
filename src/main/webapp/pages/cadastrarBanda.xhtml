@@ -1,0 +1,219 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:showMustGoOn="http://java.sun.com/jsf/composite/showMustGoOn/components">
+
+
+	<ui:define name="corpo">
+		<showMustGoOn:menu />
+		<h:form id="frm">
+			<p:messages id="msgs" />
+			
+			<p:remoteCommand name="resetarCidade" process="@this"
+				update="autoCompleteCidade">
+				<p:resetInput target="autoCompleteCidade" />
+			</p:remoteCommand>
+
+			<div align="center" style="width: 100%;margin-top: 10px;">
+				<h1>Cadastrar Minha Banda.</h1>
+			</div>
+			
+
+			<div class="ui-fluid">
+				<p:outputPanel id="panelBanda">
+				<p:panel id="panel" header="Dados da Banda" style="margin-top:20px;margin-left:30px;margin-bottom:10px;width:50%;align:center;float:left">
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Nome da Banda:" for="nomeBanda" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:inputText id="nomeBanda" 
+							value="#{cadastroBandaController.banda.nome}"
+							required="true"
+							requiredMessage="O campo Nome Banda não pode ser vazio." />
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Data Fundação:" for="dataFundacao" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:calendar value="#{cadastroBandaController.banda.dataFundacao}"
+							effect="fold"
+							mask="99/99/9999"
+							pattern="dd/MM/yyyy"
+							required="true"
+							requiredMessage="O campo Data Fundação não pode ser vazio." 
+							navigator="true"
+							yearRange="c-100:c"
+							id="dataFundacao"/>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Email:" for="email" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:inputText value="#{cadastroBandaController.banda.emailContato}"
+							id="email"
+							required="true"
+							requiredMessage="O campo Email não pode ser vazio."/>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Telefone Contato:" for="telContato" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:inputMask mask="(99)99999-9999"
+							id="telContato"
+							value="#{cadastroBandaController.banda.telefoneContato}"/>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Estado" for="comboEstado" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:selectOneMenu
+							id="comboEstado"
+							effect="blind"
+							value="#{cadastroBandaController.banda.estado}"
+							converter="SimpleEntityConverter"
+							onchange="resetarCidade()"
+							required="true"
+							requiredMessage="O campo Estado não pode ser vazio.">
+							<p:ajax  
+								process="comboEstado" 
+								update="autoCompleteCidade comboEstado"/>
+							<f:selectItem itemLabel="Selecione o estado..." itemValue="" />
+							<f:selectItems 
+								value="#{cadastroBandaController.listaEstados}" 
+								var="estado" 
+								itemLabel="#{estado.nome}" 
+								itemValue="#{estado}" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Cidade" for="autoCompleteCidade" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:autoComplete 
+							id="autoCompleteCidade"
+							value="#{cadastroBandaController.banda.cidade}" 
+							disabled="#{cadastroBandaController.banda.estado == null}"
+							placeholder="Selecione a cidade..." 
+							maxResults="7"
+							required="true"
+							requiredMessage="O campo Cidade não pode ser vazio."
+							completeMethod="#{cadastroBandaController.listarCidades}"
+							converter="SimpleEntityConverter"
+							effect="fade"
+							minQueryLength="3"
+							var="cidade"
+							itemValue="${cidade}"
+							itemLabel="${cidade.nome}">
+						</p:autoComplete>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Link Facebook" for="facebook" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:inputText value="#{cadastroBandaController.banda.facebook}"
+							id="facebook"/>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Link Twitter" for="twitter" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:inputText value="#{cadastroBandaController.banda.twitter}"
+							id="twitter"/>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Sobre a Banda:" for="sobre" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:editor id="sobre"
+							value="#{cadastroBandaController.banda.descricaoBanda}"/>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="Imagem da Banda:" for="imgBanda" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:fileUpload 
+							value="#{cadastroBandaController.imagemBanda}" 
+							update="msgs" 
+							id="imgBanda"
+							fileUploadListener="#{cadastroBandaController.fileUpload}"
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+							skinSimple="true"
+							auto="true"
+							oncomplete="swal('Bom Trabalho !!', 'O Upload da imagem foi concluido. :D', 'success');"/>
+					</p:panelGrid>
+				</p:panel>
+				</p:outputPanel>
+				<p:panel id="panelVinculo" header="Vincular Musicos" style="margin-left:20px;margin-top:20px;margin-bottom:10px;width:40%;float:left">
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Nome Musico:" for="autoCompleteMusico" style="float:right;line-height: 2em;" indicateRequired="false"/>
+						<p:autoComplete 
+							id="autoCompleteMusico"
+							value="#{cadastroBandaController.musicoVinculo}" 
+							maxResults="7"
+							required="true"
+							requiredMessage="O campo Musico não pode ser vazio para vincular a banda."
+							completeMethod="#{cadastroBandaController.listarMusico}"
+							converter="SimpleEntityConverter"
+							effect="fade"
+							minQueryLength="3"
+							inputStyle="width:240px;"
+							var="musico"
+							itemValue="${musico}"
+							itemLabel="${musico.nomeSobrenomeEstadoCidadeMusico}">
+						</p:autoComplete>
+					</p:panelGrid>
+					<p:panelGrid columns="2" columnClasses="ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputLabel value="* Funções:" for="funcoesMusico" style="float:right;line-height: 2em;" indicateRequired="false"/>
+				        <p:selectManyMenu id="funcoesMusico" 
+				        	value="#{cadastroBandaController.funcoesSelecionadasVinculo}" 
+				        	converter="SimpleEntityConverter"
+	                         var="f"
+	                         filter="true" 
+	                         required="true"
+	                         requiredMessage="É necessário marcar ao menos uma função para o músico."
+	                         filterMatchMode="contains" 
+	                         showCheckbox="true">
+				            	<f:selectItems value="#{cadastroBandaController.listaFuncoes}" 
+				            		var="funcao" 
+				            		itemLabel="#{funcao.descricaoFuncao}" 
+				            		itemValue="#{funcao}" />
+				            	<p:column>
+	                				<h:outputText value="#{f.descricaoFuncao}" />
+	            				</p:column>
+	        			</p:selectManyMenu>
+					</p:panelGrid>
+					<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank">
+							<p:commandButton
+								actionListener="#{cadastroBandaController.adicionarMusico}"
+								partialSubmit="true"
+								process="funcoesMusico autoCompleteMusico @this"
+								update="msgs funcoesMusico autoCompleteMusico panelGrid panelSalvar"
+								style="width:150px;margin-left:40%;margin-top:15px;"
+								value="Adicionar Músico"
+								icon="fa fa-plus-square"/>
+					</p:panelGrid>
+					<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:outputPanel id="panelGrid">
+							<p:dataTable value="#{cadastroBandaController.listaMusicosBanda}" var="dto"
+								rows="5" paginator="true" paginatorPosition="bottom"
+								style="margin-top: 20px" id="dtoTable"
+								rendered="#{not empty cadastroBandaController.listaMusicosBanda}">
+								
+								<p:column headerText="Nome Músico">
+									<h:outputText value="#{dto.musico.nome} #{dto.musico.sobrenome}" style="align:left;"/>
+								</p:column>
+								<p:column headerText="Função(oes)">
+									<h:outputText value="#{dto.funcoesFormatadas}" style="align:left;"/>
+								</p:column>
+								<p:column headerText="Remover" style="text-align:center;width:15%">
+									<p:commandLink action="#{cadastroBandaController.excluirMusico}" 
+										immediate="true" update="frm:panelGrid frm:panelSalvar">
+											<f:param name="codMusico" value="#{dto.musico.codMusico}"/>
+											<p:graphicImage  name="showMustGoOn/images/remove.png" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:panelGrid>
+					<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank">
+							<p:outputPanel id="panelSalvar">
+								<p:commandButton
+									action="#{cadastroBandaController.salvarBanda}"
+									style="width:150px;margin-left:40%;margin-top:15px;"
+									rendered="#{not empty cadastroBandaController.listaMusicosBanda}"
+									update="msgs"
+									partialSubmit="true"
+									process="panelBanda @this"
+									value="Criar Banda"
+									icon="fa fa-plus-square"/>
+							</p:outputPanel>
+					</p:panelGrid>
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

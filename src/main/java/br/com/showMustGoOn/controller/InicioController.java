@@ -2,22 +2,19 @@ package br.com.showMustGoOn.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 
-import br.com.showMustGoOn.DTO.MusicoDTO;
 import br.com.showMustGoOn.enums.SexoEnum;
 import br.com.showMustGoOn.model.Cidade;
 import br.com.showMustGoOn.model.Estado;
@@ -41,6 +38,9 @@ public class InicioController extends BaseController implements Serializable {
 	@PostConstruct
 	public void init(){
 		setListaEstados(inicioService.listarEstados());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		 HttpSession session = (HttpSession) fc.getExternalContext().getSession(true);
+		session.setAttribute("paginaLogin", true);
 	}
 	
 	public void efetuarLogin() throws IOException{
@@ -52,6 +52,7 @@ public class InicioController extends BaseController implements Serializable {
 		 if(inicioService.verificarLogin(getLogin(), getSenha())){
 			 context.addCallbackParam("logado", true);
 			 session.setAttribute("logado", true);
+			 session.setAttribute("emailLogado", getLogin());
 			 fc.getExternalContext().redirect("principal.xhtml");
 		 }else{
 			 context.addCallbackParam("logado", false);

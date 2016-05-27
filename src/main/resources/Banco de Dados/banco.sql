@@ -53,11 +53,40 @@ CREATE TABLE IF NOT EXISTS `cidade` (
   PRIMARY KEY (`id`)
 )  ENGINE=InnoDB  DEFAULT CHARSET=latin1  ;
 
+CREATE TABLE IF NOT EXISTS `banda`(
+	`cod_banda` INTEGER NOT NULL AUTO_INCREMENT,
+	`nome` VARCHAR(120) NOT NULL,
+	`data_fundacao` DATE NOT NULL,
+	`facebook` VARCHAR(200),
+	`twitter` VARCHAR(200),
+	`email_contato` VARCHAR(250),
+	`tel_contato` VARCHAR(16),
+	`imagem` BLOB,
+    `estado` int(11) NOT NULL,
+    `cidade` int(11) NOT NULL,
+    `descricao_banda` LONGTEXT,
+    PRIMARY KEY (`cod_banda`)
+)ENGINE=InnoDB  DEFAULT CHARSET=latin1  ;
+
+CREATE TABLE IF NOT EXISTS `banda_musico_funcao`(
+	`cod_banda_musico_funcao` INTEGER NOT NULL AUTO_INCREMENT,
+	`cod_banda` INTEGER NOT NULL,
+	`cod_funcao` INTEGER NOT NULL,
+	`cod_musico` INTEGER NOT NULL,
+    PRIMARY KEY (`cod_banda_musico_funcao`)
+)ENGINE=InnoDB  DEFAULT CHARSET=latin1  ;
+
+
 ALTER TABLE `musico` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);
 ALTER TABLE `musico` ADD FOREIGN KEY (`cidade`) REFERENCES `cidade`(`id`);
 ALTER TABLE `cidade` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);
 ALTER TABLE `funcao_musico` ADD FOREIGN KEY (`cod_musico`) REFERENCES `musico`(`cod_musico`);
 ALTER TABLE `funcao_musico` ADD FOREIGN KEY (`cod_funcao`) REFERENCES `funcao`(`cod_funcao`);
+ALTER TABLE `banda` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);
+ALTER TABLE `banda` ADD FOREIGN KEY (`cidade`) REFERENCES `cidade`(`id`);
+ALTER TABLE `banda_musico_funcao` ADD FOREIGN KEY (`cod_musico`) REFERENCES `musico`(`cod_musico`);
+ALTER TABLE `banda_musico_funcao` ADD FOREIGN KEY (`cod_funcao`) REFERENCES `funcao`(`cod_funcao`);
+ALTER TABLE `banda_musico_funcao` ADD FOREIGN KEY (`cod_banda`) REFERENCES `banda`(`cod_banda`);
 
 INSERT INTO `funcao` VALUES
 (1,'Vocalista'),

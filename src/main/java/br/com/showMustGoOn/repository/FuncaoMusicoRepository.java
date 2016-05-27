@@ -15,6 +15,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.showMustGoOn.DTO.MusicoDTO;
+import br.com.showMustGoOn.model.Funcao;
 import br.com.showMustGoOn.model.FuncaoMusico;
 import br.com.showMustGoOn.model.Musico;
 
@@ -66,6 +67,40 @@ public class FuncaoMusicoRepository implements Serializable {
 		}
 		if(musicoDTO.getListaFuncoes() != null && !musicoDTO.getListaFuncoes().isEmpty()){
 			criteria.add(Restrictions.in("funcao", musicoDTO.getListaFuncoes()));
+		}
+	}
+
+	@SuppressWarnings(value="unchecked")
+	public List<Funcao> carregarFuncoesMusico(Integer codMusico) {
+		Criteria criteria = criarCriteriaCarregarFuncaoMusico(codMusico);
+		criteria.setProjection(Projections.property("funcao"));
+		return criteria.list();
+	}
+	@SuppressWarnings(value="unchecked")
+	public List<FuncaoMusico> listarFuncoesMusico(Integer codMusico) {
+		Criteria criteria = criarCriteriaCarregarFuncaoMusico(codMusico);
+		return criteria.list();
+	}
+
+	private Criteria criarCriteriaCarregarFuncaoMusico(Integer codMusico) {
+		Session session = manager.unwrap(Session.class);
+		Criteria criteria = session.createCriteria(FuncaoMusico.class);
+		criteria.createAlias("musico", "musico");
+		criteria.createAlias("funcao", "funcao");
+		
+		criteria.add(Restrictions.eq("musico.codMusico", codMusico));
+		return criteria;
+	}
+
+	public void excluirTodos(List<FuncaoMusico> funcoesMusico) {
+		for (FuncaoMusico funcao : funcoesMusico) {
+			manager.remove(funcao);
+		}
+	}
+
+	public void salvar(List<FuncaoMusico> criarListaFuncoesMusico) {
+		for (FuncaoMusico funcaoMusico : criarListaFuncoesMusico) {
+			manager.persist(funcaoMusico);
 		}
 	}
 

@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -43,16 +45,30 @@ public class Musicos implements Serializable {
 		return (Long)criteria.uniqueResult() > 0 ? true : false;
 	}
 
-	public Musico obterMusicoPorEmail(String email) {
+	public Musico obterMusicoPorEmail(String email, Integer codMusico) {
 		Session session = manager.unwrap(Session.class);
 		Criteria criteria = session.createCriteria(Musico.class);
 		criteria.add(Restrictions.eq("email", email));
+		if(codMusico != null){
+			criteria.add(Restrictions.ne("codMusico", codMusico));
+		}
 		return (Musico)criteria.uniqueResult();
 		
 	}
 
 	public void salvar(Musico musico) {
 		manager.merge(musico);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Musico> listarMusicosPorNome(String nome) {
+		Session session = manager.unwrap(Session.class);
+		Criteria criteria = session.createCriteria(Musico.class);
+		Disjunction disjunction = Restrictions.disjunction();
+		disjunction.add(Restrictions.ilike("nome", nome,MatchMode.ANYWHERE));
+		disjunction.add(Restrictions.ilike("sobrenome", nome,MatchMode.ANYWHERE));
+		criteria.add(disjunction);
+		return criteria.list();
 	}
 
 }
