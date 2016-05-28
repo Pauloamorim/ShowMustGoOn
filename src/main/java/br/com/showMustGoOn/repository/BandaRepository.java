@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.showMustGoOn.model.Banda;
@@ -19,7 +20,7 @@ public class BandaRepository implements Serializable {
 	@Inject
 	private EntityManager manager;
 
-	public Banda porId(Long id) {
+	public Banda porId(Integer id) {
 		return manager.find(Banda.class, id);
 	}
 
@@ -32,11 +33,30 @@ public class BandaRepository implements Serializable {
 		manager.flush();
 	}
 
-	public Banda obterBandaPorNome(String nome) {
+	public Banda obterBandaPorNome(String nome, Integer codBanda) {
 		final Session session = manager.unwrap(Session.class);
 		final Criteria criteria = session.createCriteria(Banda.class);
 		criteria.add(Restrictions.eq("nome", nome));
-		return (Banda)criteria.uniqueResult();
+		if (codBanda != null) {
+			criteria.add(Restrictions.ne("codBanda", codBanda));
+		}
+		return (Banda) criteria.uniqueResult();
+	}
+
+	public byte[] obterImagemBanda(Integer codBanda) {
+		final Session session = manager.unwrap(Session.class);
+		final Criteria criteria = session.createCriteria(Banda.class);
+		criteria.add(Restrictions.eq("codBanda", codBanda));
+		criteria.setProjection(Projections.property("imagem"));
+		return (byte[]) criteria.uniqueResult();
+	}
+
+	public void remove(Banda banda) {
+		manager.remove(banda);
+	}
+
+	public void alterar(Banda banda) {
+		manager.merge(banda);
 	}
 
 }

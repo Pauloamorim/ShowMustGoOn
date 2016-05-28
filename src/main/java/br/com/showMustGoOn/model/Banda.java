@@ -1,6 +1,8 @@
 package br.com.showMustGoOn.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,52 +15,56 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import br.com.showMustGoOn.converter.BaseEntity;
 
 @Entity
-@Table(name="banda")
-public class Banda implements Serializable,BaseEntity {
+@Table(name = "banda")
+public class Banda implements Serializable, BaseEntity {
 
 	private static final long serialVersionUID = -8469109513792027072L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="cod_banda")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cod_banda")
 	private Integer codBanda;
-	
-	@Column(name="nome",nullable=false)
+
+	@Column(name = "nome", nullable = false)
 	private String nome;
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="data_fundacao",nullable=false)
+	@Column(name = "data_fundacao", nullable = false)
 	private Date dataFundacao;
-	
-	@Column(name="facebook")
+
+	@Column(name = "facebook")
 	private String facebook;
-	
-	@Column(name="twitter")
+
+	@Column(name = "twitter")
 	private String twitter;
-	
-	@Column(name="email_contato")
+
+	@Column(name = "email_contato")
 	private String emailContato;
-	
-	@Column(name="tel_contato")
+
+	@Column(name = "tel_contato")
 	private String telefoneContato;
-	
-	@Column(name="imagem")
+
+	@Column(name = "imagem")
 	private byte[] imagem;
-	
-	@Column(name="descricao_banda")
+
+	@Column(name = "descricao_banda")
 	private String descricaoBanda;
-	
+
 	@ManyToOne
-	@JoinColumn(name="estado", nullable=false)
+	@JoinColumn(name = "estado", nullable = false)
 	private Estado estado;
-	
+
 	@ManyToOne
-	@JoinColumn(name="cidade",nullable=false)
+	@JoinColumn(name = "cidade", nullable = false)
 	private Cidade cidade;
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,23 +75,39 @@ public class Banda implements Serializable,BaseEntity {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Banda other = (Banda) obj;
+		}
+		final Banda other = (Banda) obj;
 		if (codBanda == null) {
-			if (other.codBanda != null)
+			if (other.codBanda != null) {
 				return false;
-		} else if (!codBanda.equals(other.codBanda))
+			}
+		} else if (!codBanda.equals(other.codBanda)) {
 			return false;
+		}
 		return true;
 	}
-	
+
+	@Transient
+	public StreamedContent getImagemExibir() {
+		return new DefaultStreamedContent(new ByteArrayInputStream(getImagem()));
+	}
+
+	@Transient
+	public String getDataFundacaoFormatado() {
+		final SimpleDateFormat sdt = new SimpleDateFormat("dd/MM/yyyy");
+		return sdt.format(getDataFundacao());
+	}
+
 	/////////////////////////////////////////////////
-	///////////////GETTERS AND SETTERS///////////////
+	/////////////// GETTERS AND SETTERS///////////////
 	/////////////////////////////////////////////////
 
 	@Override
@@ -180,10 +202,5 @@ public class Banda implements Serializable,BaseEntity {
 	public void setCidade(Cidade cidade) {
 		this.cidade = cidade;
 	}
-
-
-
-	
-	
 
 }

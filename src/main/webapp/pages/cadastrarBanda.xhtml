@@ -172,8 +172,8 @@
 								partialSubmit="true"
 								process="funcoesMusico autoCompleteMusico @this"
 								update="msgs funcoesMusico autoCompleteMusico panelGrid panelSalvar"
-								style="width:150px;margin-left:40%;margin-top:15px;"
-								value="Adicionar Músico"
+								style="width:160px;margin-left:40%;margin-top:15px;"
+								value="Adicionar Músico(a)"
 								icon="fa fa-plus-square"/>
 					</p:panelGrid>
 					<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid" styleClass="ui-panelgrid-blank">
@@ -208,7 +208,7 @@
 									update="msgs"
 									partialSubmit="true"
 									process="panelBanda @this"
-									value="Criar Banda"
+									value="#{cadastroBandaController.banda.codBanda eq null ? 'Criar Banda' : 'Alterar Banda'}"
 									icon="fa fa-plus-square"/>
 							</p:outputPanel>
 					</p:panelGrid>

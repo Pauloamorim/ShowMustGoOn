@@ -13,6 +13,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -42,20 +43,25 @@ public class CadastroBandaController extends BaseController implements Serializa
 	private UploadedFile imagemBanda;
 
 	@PostConstruct
-	public void init(){
+	public void init() {
+		final String cod = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("codBanda");
+		setBanda(StringUtils.isNotBlank(cod) ? cadastroBandaService.obterBanda(Integer.valueOf(cod)) : new Banda());
+		setListaMusicosBanda(StringUtils.isNotBlank(cod)
+				? cadastroBandaService.listarMusicosFuncoes(Integer.valueOf(cod)) : new ArrayList<MusicoFuncaoDTO>());
 		setListaEstados(cadastroBandaService.listarEstados());
-		setBanda(new Banda());
 		setListaFuncoes(cadastroBandaService.listarFuncoes());
-		setListaMusicosBanda(new ArrayList<MusicoFuncaoDTO>());
 	}
 
-	public List<Cidade> listarCidades(String cidade){
-		return cadastroBandaService.listarCidadesPorEstado(getBanda().getEstado().getCodEstado(),cidade);
+	public List<Cidade> listarCidades(String cidade) {
+		return cadastroBandaService.listarCidadesPorEstado(getBanda().getEstado().getCodEstado(), cidade);
 	}
-	public List<Musico> listarMusico(String nome){
+
+	public List<Musico> listarMusico(String nome) {
 		return cadastroBandaService.listarMusicosPorNome(nome);
 	}
-	public void adicionarMusico(){
+
+	public void adicionarMusico() {
 		try {
 			validarMusicoVinculado();
 			getListaMusicosBanda().add(new MusicoFuncaoDTO(getMusicoVinculo(), getFuncoesSelecionadasVinculo()));
@@ -65,20 +71,25 @@ public class CadastroBandaController extends BaseController implements Serializa
 			adicionarMensagem(e.getMessage(), FacesMessage.SEVERITY_ERROR);
 		}
 	}
-	public void excluirMusico(){
-		final Integer codMusico =Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codMusico"));
+
+	public void excluirMusico() {
+		final Integer codMusico = Integer.valueOf(
+				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codMusico"));
 
 		for (final Iterator iterator = getListaMusicosBanda().iterator(); iterator.hasNext();) {
 			final MusicoFuncaoDTO dto = (MusicoFuncaoDTO) iterator.next();
-			if(dto.getMusico().getCodMusico().equals(codMusico)){
+			if (dto.getMusico().getCodMusico().equals(codMusico)) {
 				iterator.remove();
 			}
 		}
 	}
-	public String salvarBanda(){
+
+	public String salvarBanda() {
 		try {
-			cadastroBandaService.salvarBanda(getBanda(),getListaMusicosBanda());
-			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("msgSucessoBanda", "Sua Banda foi cadastrada. :D");
+			final String mensagemRetorno = getBanda().getCodBanda() != null ? "Sua Banda foi Alterada :D"
+					: "Sua Banda foi cadastrada. :D";
+			cadastroBandaService.salvarBanda(getBanda(), getListaMusicosBanda());
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("msgSucessoBanda", mensagemRetorno);
 			return "perfil.xhmtl?faces-redirect=true";
 		} catch (final Exception e) {
 			adicionarMensagem(e.getMessage(), FacesMessage.SEVERITY_ERROR);
@@ -88,7 +99,7 @@ public class CadastroBandaController extends BaseController implements Serializa
 
 	private void validarMusicoVinculado() throws Exception {
 		for (final MusicoFuncaoDTO dto : getListaMusicosBanda()) {
-			if(dto.getMusico().getCodMusico().equals(getMusicoVinculo().getCodMusico())){
+			if (dto.getMusico().getCodMusico().equals(getMusicoVinculo().getCodMusico())) {
 				throw new Exception("Este músico já está vinculado a banda.");
 			}
 		}
@@ -159,8 +170,5 @@ public class CadastroBandaController extends BaseController implements Serializa
 	public void setImagemBanda(UploadedFile imagemBanda) {
 		this.imagemBanda = imagemBanda;
 	}
-
-
-
 
 }

@@ -17,10 +17,13 @@
 		<showMustGoOn:menu />
 
 		<h1 align="center">Meu Perfil</h1>
+		<p:outputPanel id="panelExibirBanda">
+			<showMustGoOn:exibirBanda  banda="#{perfilController.bandaExibir}"></showMustGoOn:exibirBanda>
+		</p:outputPanel>
 		<h:form id="form">
 			<p:messages id="msgs" closable="true"/>
-			<p:tabView orientation="left">
-				<p:tab title="Dados Básicos">
+			<p:tabView orientation="left" id="tab">
+				<p:tab title="Dados Básicos" >
 					<h:panelGrid columns="2" cellpadding="10">
 						
 						
@@ -197,12 +200,6 @@
 							update="form:msgs @form"
 							value="Alterar"
 							icon="fa fa-plus-square"/>
-							
-							<p:commandButton value="Voltar" 
-							ajax="false" 
-							immediate="true"
-							action="principal.xhtml?faces-redirect=true" 
-							style="width:70px"/>
 						</div>
 						
 						</p:outputPanel>
@@ -211,56 +208,102 @@
 					</h:panelGrid>
 				</p:tab>
 				<p:tab title="Habilidades Musicais">
+					<div align="center">
 					<h:panelGrid columns="1" cellpadding="10">
-					
-								<p:panel id="toggleable"
-								 header="Qualificações" 
-								 toggleable="true"
-								 toggleSpeed="500"
-								 widgetVar="panel" 
-								 style="margin-bottom:20px;margin-top:20px;">
-									<p:selectManyCheckbox id="opcoesFuncoes" 
-										value="#{perfilController.listaFuncoesSelecionadas}" 
-										layout="grid" 
-										converter="SimpleEntityConverter"
-										columns="10">
-				       					<f:selectItems 
-				       						 value="#{perfilController.listaFuncoes}"
-				       						 var="funcao" 
-				       						 itemLabel="#{funcao.descricaoFuncao}" 
-				       						 itemValue="#{funcao}" />
-				   					</p:selectManyCheckbox>
-								</p:panel>
-					
-					
+						<p:panel id="toggleable"
+						 header="Qualificações" 
+						 toggleable="true"
+						 toggleSpeed="500"
+						 widgetVar="panel" 
+						 style="margin-bottom:20px;margin-top:20px;">
+							<p:selectManyCheckbox id="opcoesFuncoes" 
+								value="#{perfilController.listaFuncoesSelecionadas}" 
+								layout="grid"
+								converter="SimpleEntityConverter"
+								columns="10">
+								<p:ajax  
+								process="opcoesFuncoes" 
+								update="comboEstado"/>
+		       					<f:selectItems 
+		       						 value="#{perfilController.listaFuncoes}"
+		       						 var="funcao" 
+		       						 itemLabel="#{funcao.descricaoFuncao}" 
+		       						 itemValue="#{funcao}" />
+		   					</p:selectManyCheckbox>
+						</p:panel>
 					</h:panelGrid>
+					</div>
+					<div align="center">
 							<p:commandButton
-							actionListener="#{perfilController.salvar}"
-							update="form:msgs @form"
+							action="#{perfilController.atualizarQualificacoes}"
+							update="form:msgs opcoesFuncoes"
+							immediate="true"
 							value="Alterar"
 							icon="fa fa-plus-square"/>
-							
-							<p:commandButton value="Voltar" 
-							ajax="false" 
-							immediate="true"
-							action="principal.xhtml?faces-redirect=true" 
-							style="width:70px"/>
+					</div>
 				</p:tab>
-				<p:tab title="Minhas Bandas">
+				<p:tab title="Minhas Bandas" id="minhasBandas">
 				
+					<p:dataScroller value="#{perfilController.listaBandas}" var="banda" id="tableBandas" chunkSize="10">
+				        <f:facet name="header">
+				            Minhas Bandas
+				        </f:facet>
+				 
+				        <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail" >
+	 				            <p:graphicImage value="#{imagemController.obterImagemBanda}" >
+					            	 <f:param name="codBanda" value="#{banda.codBanda}" />
+					            </p:graphicImage>
+					        <p:outputPanel>
+				                <h:panelGrid columns="2" cellpadding="5">
+				                    <h:outputText value="Nome:" />
+				                    <h:outputText value="#{banda.nome}" style="font-weight: bold"/>
+				               		<h:outputText value="Data Fundação:" />
+				                    <h:outputText value="#{banda.dataFundacaoFormatado}" style="font-weight: bold"/>
+				                </h:panelGrid>
+				            </p:outputPanel>
+				            <p:outputPanel>
+				                <h:panelGrid columns="6" cellpadding="5">
+				                
+				                
+									<p:commandLink action="#{perfilController.setarCodBandaExibicao}" 
+										immediate="true" process="@this" ajax="true" update=":panelExibirBanda form:msgs"  id="iconView" oncomplete="PF('dadosBanda').show();" >
+											<f:param name="codBanda" value="#{banda.codBanda}"/>
+											<p:graphicImage  name="showMustGoOn/images/view.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipView" for="iconView" value="Exibir todos dados da banda"
+              						 showEffect="clip" hideEffect="explode" />
+              						 
+              						 
+									<p:commandLink action="cadastrarBanda.xhtml?faces-redirect?true"  
+										id="iconUpdate" immediate="true" process="@this">
+											<f:param name="codBanda" value="#{banda.codBanda}"/>
+											<p:graphicImage  name="showMustGoOn/images/update.png" />
+									</p:commandLink>
+									 <p:tooltip id="toolTipAlter" for="iconUpdate" value="Alterar dados da Banda"
+              						 showEffect="clip" hideEffect="explode" />
+              						 
+              						 
+									<p:commandLink onclick="if(!confirm('Deseja Excluir esta banda?'))return false" update="form:msgs tableBandas"
+										 actionListener="#{perfilController.removerBanda}"  immediate="true" id="iconRemove" >
+											<f:param name="codBanda" value="#{banda.codBanda}"/>
+											<p:graphicImage  name="showMustGoOn/images/remove.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipRemove" for="iconRemove" value="Excluir Banda"
+              						 showEffect="clip" hideEffect="explode" />
+				                </h:panelGrid>
+				            </p:outputPanel>
+				        </h:panelGrid>
+					 
+					    </p:dataScroller>
+								
 					<p:commandButton value="Criar minha banda." 
-						ajax="false" 
+						process="@this"
 						immediate="true"
 						action="cadastrarBanda.xhtml?faces-redirect=true" 
 						style="width:300px"/>
 				
 				</p:tab>
 			</p:tabView>
-			<div align="center">
-
-			</div>
 		</h:form>
-
-
 	</ui:define>
 </ui:composition>

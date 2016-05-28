@@ -10,32 +10,55 @@
 	
 	
 	<ui:define name="corpo">
+
  		<f:metadata>
-			<f:viewAction  action="#{consultarMusicosController.verificarLogado}" />
+			<f:viewAction  action="#{consultarBandasController.verificarLogado}" />
 		</f:metadata>
 		
-		<showMustGoOn:menu/>
-
+		<showMustGoOn:menu />
+		<p:outputPanel id="panelExibirBanda">
+			<showMustGoOn:exibirBanda  banda="#{consultarBandasController.bandaExibir}"></showMustGoOn:exibirBanda>
+		</p:outputPanel>
 		<h:form id="frm">
 			<p:messages id="msgs" />
+			
+
 			<div align="center" style="width: 100%">
-				<h1>Consultar Músicos</h1>
+				<h1>Consultar Bandas</h1>
 			</div>
 
 			<div class="ui-fluid">
 			<p:panel id="panel" header="Filtros Pesquisa" style="margin-left:10%;margin-bottom:10px;width:80%;align:center;">
 				<p:panelGrid columns="3" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
 					<p:inputText 
-						value="${consultarMusicosController.dto.nome}"
+						value="${consultarBandasController.dto.nome}"
 						maxlength="100"
 						size="100"
-						placeholder="Nome ou Sobrenome do músico"/>
+						placeholder="Nome da Banda"/>
+				</p:panelGrid>
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+					<p:autoComplete 
+							id="autoCompleteMusico"
+							value="#{consultarBandasController.dto.musico}" 
+							maxResults="7"
+							completeMethod="#{cadastroBandaController.listarMusico}"
+							converter="SimpleEntityConverter"
+							effect="fade"
+							minQueryLength="3"
+							forceSelection="true"
+							size="100"
+							var="musico"
+							style="margin-top:20px;"
+							placeholder="Nome do Músico"
+							itemValue="${musico}"
+							itemLabel="${musico.nomeSobrenomeEstadoCidadeMusico}">
+					</p:autoComplete>
 				</p:panelGrid>
 				<p:panelGrid columns="3" columnClasses="ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
 					<p:selectOneMenu
 						id="comboEstado"
 						effect="blind"
-						value="${consultarMusicosController.dto.estado}"
+						value="${consultarBandasController.dto.estado}"
 						converter="SimpleEntityConverter"
 						style="margin-top:20px;"
 						onchange="resetarCidade()">
@@ -44,7 +67,7 @@
 							update="autoCompleteCidade comboEstado"/>
 						<f:selectItem itemLabel="Selecione o estado..." itemValue="" />
 						<f:selectItems 
-							value="#{consultarMusicosController.listaEstados}" 
+							value="#{consultarBandasController.listaEstados}" 
 							var="estado" 
 							itemLabel="#{estado.nome}" 
 							itemValue="#{estado}" />
@@ -52,13 +75,13 @@
 
 					<p:autoComplete 
 						id="autoCompleteCidade"
-						value="#{consultarMusicosController.dto.cidade}" 
-						disabled="${consultarMusicosController.dto.estado == null}"
+						value="#{consultarBandasController.dto.cidade}" 
+						disabled="${consultarBandasController.dto.estado == null}"
 						placeholder="Selecione a cidade..." 
 						size="280"
 						maxResults="7"
 						style="margin-top:20px;"
-						completeMethod="#{consultarMusicosController.listarCidades}"
+						completeMethod="#{consultarBandasController.listarCidades}"
 						converter="SimpleEntityConverter"
 						effect="fade"
 						minQueryLength="3"
@@ -67,53 +90,22 @@
 						itemLabel="${cidade.nome}">
 					</p:autoComplete>
 				
-					<p:selectOneMenu
-						id="comboSexo"
-						effect="blind"
-						value="${consultarMusicosController.dto.sexo}"
-						style="width:150px;margin-top:20px;">
-						<f:selectItem itemLabel="Selecione o sexo..." itemValue="" />
-						<f:selectItems 
-							value="#{consultarMusicosController.listaSexo}" 
-							var="sexo" 
-							itemLabel="#{sexo.descricao}" 
-							itemValue="#{estado}" />
-					</p:selectOneMenu>
+				
 				</p:panelGrid>
-				<p:panelGrid columns="1" columnClasses="ui-grid-col-5" layout="grid" styleClass="ui-panelgrid-blank">
-						<p:panel id="toggleable"
-						 header="Qualificações" 
-						 toggleable="true"
-						 toggleSpeed="500"
-						 widgetVar="panel" 
-						 style="margin-bottom:20px;margin-top:20px;">
-							<p:selectManyCheckbox id="opcoesFuncoes" 
-								value="#{consultarMusicosController.dto.listaFuncoes}" 
-								layout="grid" 
-								converter="SimpleEntityConverter"
-								columns="3">
-		       					<f:selectItems 
-		       						 value="#{consultarMusicosController.listaFuncoes}"
-		       						 var="funcao" 
-		       						 itemLabel="#{funcao.descricaoFuncao}" 
-		       						 itemValue="#{funcao}" />
-		   					</p:selectManyCheckbox>
-						</p:panel>
-				</p:panelGrid>
-				<p:panelGrid columns="3" columnClasses="ui-grid-col-5" layout="grid" >
+				<p:panelGrid columns="3" columnClasses="ui-grid-col-5" layout="grid" style="margin-top:30px;" >
 				<p:commandButton 
-					actionListener="#{consultarMusicosController.pesquisar}" 
+					actionListener="#{consultarBandasController.pesquisar}" 
 					value="Pesquisar"
 					id="botaoPesquisar" 
 					update="msgs divTabela"
-					process="@form" 
 					icon="ui-icon-search" 
 					title="Pesquisar" />
 				<p:commandButton 
 					value="Limpar Filtros"
 					id="botaoLimpar"
-					actionListener="#{consultarMusicosController.limparFiltros}"
-					update="panel"
+					actionListener="#{consultarBandasController.limparFiltros}"
+					update="panel divTabela"
+					partialSubmit="true"
 					process="@this" 
 					icon="ui-icon-trash" 
 					title="Limpar Filtros" >
@@ -121,13 +113,12 @@
 				<p:commandButton 
 					value="Limpar Resultados"
 					id="botaoLimparGrid"
-					actionListener="#{consultarMusicosController.limparGridResultados}"
+					actionListener="#{consultarBandasController.limparGridResultados}"
 					update="divTabela"
 					process="@this" 
 					icon="ui-icon-trash" 
 					title="Limpar resultados retornados pela pesquisa" />
 				</p:panelGrid>
-
 
 			<p:remoteCommand name="resetarCidade" process="@this"
 				update="autoCompleteCidade">
@@ -136,35 +127,41 @@
 
 
 			<p:outputPanel id="divTabela">	
-				<p:outputPanel rendered="#{not empty consultarMusicosController.listaMusicos}">
-					<p:dataTable value="#{consultarMusicosController.listaMusicos}" var="musico"
-							emptyMessage="Nenhum músico cadastrado." rows="10" 
+				<p:outputPanel rendered="#{not empty consultarBandasController.listaBanda}">
+					<p:dataTable value="#{consultarBandasController.listaBanda}" var="banda"
+							emptyMessage="Nenhuma Banda encontrada." rows="10" 
 							paginator="true" paginatorPosition="bottom"
 							style="margin-top: 50px" id="musicos-table">
 							
 						<p:column headerText="Exibir Perfil" width="5%" >
-							<p:graphicImage library="showMustGoOn/images" name="musico.png" style="center;"/>
+							<p:commandLink action="#{consultarBandasController.setarCodBandaExibicao}" 
+								immediate="true" process="@this" ajax="true" update=":panelExibirBanda frm:msgs"  id="iconView" oncomplete="PF('dadosBanda').show();" >
+									<f:param name="codBanda" value="#{banda.codBanda}"/>
+									<p:graphicImage  name="showMustGoOn/images/view.png" />
+							</p:commandLink>
 						</p:column>
 							
-						<p:column headerText="Nome" sortBy="#{musico.nome}">
-							<h:outputText value="#{musico.nome}" style="text-align: center !important;" />
+						<p:column headerText="Nome">
+							<h:outputText value="#{banda.nome}" style="text-align: center !important;" />
 						</p:column>
-						<p:column headerText="Sobrenome" sortBy="#{musico.sobrenome}">
-							<h:outputText value="#{musico.sobrenome}" />
+						<p:column headerText="Data Fundação">
+							<h:outputText value="#{banda.dataFundacaoFormatado}" style="text-align: center !important;" />
 						</p:column>
-						<p:column headerText="Estado" sortBy="#{musico.estado.nome}">
-							<h:outputText value="#{musico.estado.nome}" style="align:center;"/>
+						<p:column headerText="Cidade">
+							<h:outputText value="#{banda.cidade.nome}" />
+						</p:column>
+						<p:column headerText="Estado">
+							<h:outputText value="#{banda.estado.nome}" style="align:center;"/>
 						</p:column>
 					</p:dataTable>
 				</p:outputPanel>
 			</p:outputPanel>
 			
-			<div style="width: 100%" align="center">
+			<div style="width: 100%;margin-top:30px;" align="center">
 				<p:commandButton value="Voltar" ajax="false" action="principal.xhtml?faces-redirect=true" style="width:70px"/>
 			</div>
-			
-			</p:panel>
-			</div>
+		</p:panel>
+		</div>
 		
 		</h:form>
 		

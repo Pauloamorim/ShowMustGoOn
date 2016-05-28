@@ -7,6 +7,12 @@ body {
 	margin: 0px;
 	font-weight: normal;
 	height: auto;
+	
+}
+
+.Bimage{
+	background-image: url("../../../../showMustGoOn/resources/showMustGoOn/images/bg.png");
+	
 }
 
 header {

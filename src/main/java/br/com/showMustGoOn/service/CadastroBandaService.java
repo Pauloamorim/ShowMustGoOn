@@ -2,7 +2,10 @@ package br.com.showMustGoOn.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
@@ -37,7 +40,6 @@ public class CadastroBandaService implements Serializable {
 	@Inject
 	private BandaMusicoFuncaoRepository bandaMusicoFuncaoRepository;
 
-
 	public List<Estado> listarEstados() {
 		return estadosRepository.todas();
 	}
@@ -56,11 +58,16 @@ public class CadastroBandaService implements Serializable {
 
 	@Transacional
 	public void salvarBanda(Banda banda, List<MusicoFuncaoDTO> musicosFuncoes) throws Exception {
-		validarNomeDuplicado(banda.getNome());
-		bandaRepository.salvar(banda);
+		validarNomeDuplicado(banda.getNome(), banda.getCodBanda());
+		if (banda.getCodBanda() != null) {
+			bandaRepository.alterar(banda);
+			bandaMusicoFuncaoRepository.removeAll(bandaMusicoFuncaoRepository.listarPorCodBanda(banda.getCodBanda()));
+		} else {
+			bandaRepository.salvar(banda);
+		}
 
 		final List<BandaMusicoFuncao> listBMF = new ArrayList<BandaMusicoFuncao>();
-		//cria registros bandaMusicoFuncao
+		// cria registros bandaMusicoFuncao
 		BandaMusicoFuncao bmf;
 		for (final MusicoFuncaoDTO musicoFuncaoDTO : musicosFuncoes) {
 			for (final Funcao func : musicoFuncaoDTO.getListaFuncoes()) {
@@ -74,11 +81,37 @@ public class CadastroBandaService implements Serializable {
 		bandaMusicoFuncaoRepository.salvar(listBMF);
 	}
 
-	private void validarNomeDuplicado(String nome) throws Exception {
-		if(bandaRepository.obterBandaPorNome(nome) != null){
+	private void validarNomeDuplicado(String nome, Integer codBanda) throws Exception {
+		if (bandaRepository.obterBandaPorNome(nome, codBanda) != null) {
 			throw new Exception("Já existe uma banda com este nome.");
 		}
 	}
 
+	public Banda obterBanda(Integer valueOf) {
+		return bandaRepository.porId(valueOf);
+	}
+
+	public List<MusicoFuncaoDTO> listarMusicosFuncoes(Integer valueOf) {
+		final List<BandaMusicoFuncao> lista = bandaMusicoFuncaoRepository.listarPorCodBanda(valueOf);
+		final Map<Musico, List<Funcao>> mapa = new HashMap<Musico, List<Funcao>>();
+		final List<MusicoFuncaoDTO> listaRetorno = new ArrayList<MusicoFuncaoDTO>();
+
+		// agrupar a DTO
+		for (final BandaMusicoFuncao bandaMusicoFuncao : lista) {
+			if (mapa.get(bandaMusicoFuncao.getMusico()) == null) {
+				final List<Funcao> func = new ArrayList<Funcao>();
+				func.add(bandaMusicoFuncao.getFuncao());
+				mapa.put(bandaMusicoFuncao.getMusico(), func);
+			} else {
+				final List<Funcao> func = mapa.get(bandaMusicoFuncao.getMusico());
+				func.add(bandaMusicoFuncao.getFuncao());
+			}
+		}
+		// transformar o MAP em LIST
+		for (final Entry<Musico, List<Funcao>> list : mapa.entrySet()) {
+			listaRetorno.add(new MusicoFuncaoDTO(list.getKey(), list.getValue()));
+		}
+		return listaRetorno;
+	}
 
 }

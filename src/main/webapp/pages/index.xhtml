@@ -210,18 +210,21 @@
 						process="panelCadastro"
 						update="msgs panelCadastro"
 						value="Cadastrar"
+						id="btnCadastrar"
 						icon="fa fa-plus-square"/>
-
+					<p:defaultCommand target="btnCadastrar" scope="panelCadastro" />
+					<p:commandButton
+						onclick="PF('dlg').show();"
+						value="Fazer Login"
+						style="margin-left:10px;"
+						title="login"
+						icon="fa fa-plus-square"/>
 					</p:outputPanel>
 					<p:outputPanel id="panelLogin">
 
 					<!-- LOGIN AREA -->
-					<h:outputLink value="javascript:void(0)"
-							onclick="PF('dlg').show();" title="login">
-							Ja possui cadastro? Entre agora.. 
-						</h:outputLink>
-
-						<p:dialog header="Login" widgetVar="dlg" resizable="false">
+						<p:dialog header="Login" widgetVar="dlg" resizable="false" id="panelLogar">
+							<p:defaultCommand target="btnLogar" scope="panelLogar" />
 							<p:messages id="growl" />
 							<h:panelGrid columns="2" cellpadding="5">
 								<h:outputLabel for="username" value="Email:" />
@@ -239,6 +242,7 @@
 										actionListener="#{inicioController.efetuarLogin}"
 										partialSubmit="true"
 										process="panelLogin"
+										id="btnLogar"
 										oncomplete="handleLoginRequest(xhr, status, args)" />
 								</f:facet>
 							</h:panelGrid>
@@ -251,7 +255,7 @@
 					<div class="ui-grid-col-5">
 
 						<h1>Quem Somos?</h1>
-						<p>
+						<p >
 							Sua banda precisa de um integrante substituto? Ou um novo
 							integrante permanente? Ou você é um musico que procura uma banda
 							para tocar ou outro músico com quem possa fazer uma dupla por
