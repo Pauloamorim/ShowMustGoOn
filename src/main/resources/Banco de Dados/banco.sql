@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `banda`(
 	`twitter` VARCHAR(200),
 	`email_contato` VARCHAR(250),
 	`tel_contato` VARCHAR(16),
-	`imagem` BLOB,
+	`imagem` LONGBLOB,
     `estado` int(11) NOT NULL,
     `cidade` int(11) NOT NULL,
     `descricao_banda` LONGTEXT,
@@ -76,7 +76,26 @@ CREATE TABLE IF NOT EXISTS `banda_musico_funcao`(
     PRIMARY KEY (`cod_banda_musico_funcao`)
 )ENGINE=InnoDB  DEFAULT CHARSET=latin1  ;
 
+CREATE TABLE IF NOT EXISTS `evento`(
+	`cod_evento` INTEGER NOT NULL AUTO_INCREMENT,
+	`nome` VARCHAR(200) NOT NULL,
+	`data` DATE NOT NULL,
+	`hora_inicio` timestamp NOT NULL,
+	`hora_fim` timestamp NULL DEFAULT NULL,
+	`descricao` VARCHAR(600),
+	`endereco` VARCHAR(200),
+	`img_evento` LONGBLOB,
+	`estado` int(11) NOT NULL,
+    `cidade` int(11) NOT NULL,
+	`cod_musico_responsavel` INTEGER,
+	`tel_contato` VARCHAR(19),
+    PRIMARY KEY (`cod_evento`)
+)ENGINE=InnoDB  DEFAULT CHARSET=latin1  ;
 
+ALTER TABLE `musico` ADD column imagem LONGBLOB;
+ALTER TABLE `evento` ADD FOREIGN KEY (`cod_musico_responsavel`) REFERENCES `musico`(`cod_musico`);
+ALTER TABLE `evento` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);
+ALTER TABLE `evento` ADD FOREIGN KEY (`cidade`) REFERENCES `cidade`(`id`);
 ALTER TABLE `musico` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);
 ALTER TABLE `musico` ADD FOREIGN KEY (`cidade`) REFERENCES `cidade`(`id`);
 ALTER TABLE `cidade` ADD FOREIGN KEY (`estado`) REFERENCES `estado`(`id`);

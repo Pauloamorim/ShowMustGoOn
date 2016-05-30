@@ -17,7 +17,9 @@
 		
 		<showMustGoOn:menu />
 		<p:outputPanel id="panelExibirBanda">
-			<showMustGoOn:exibirBanda  banda="#{consultarBandasController.bandaExibir}"></showMustGoOn:exibirBanda>
+			<showMustGoOn:exibirBanda  
+				banda="#{consultarBandasController.bandaExibir}"
+				musicos="#{consultarBandasController.musicosBanda}"/>
 		</p:outputPanel>
 		<h:form id="frm">
 			<p:messages id="msgs" />
@@ -157,9 +159,6 @@
 				</p:outputPanel>
 			</p:outputPanel>
 			
-			<div style="width: 100%;margin-top:30px;" align="center">
-				<p:commandButton value="Voltar" ajax="false" action="principal.xhtml?faces-redirect=true" style="width:70px"/>
-			</div>
 		</p:panel>
 		</div>
 		

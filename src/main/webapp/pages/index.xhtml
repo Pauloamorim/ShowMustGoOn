@@ -218,7 +218,7 @@
 						value="Fazer Login"
 						style="margin-left:10px;"
 						title="login"
-						icon="fa fa-plus-square"/>
+						icon="fa fa-user"/>
 					</p:outputPanel>
 					<p:outputPanel id="panelLogin">
 
@@ -242,6 +242,7 @@
 										actionListener="#{inicioController.efetuarLogin}"
 										partialSubmit="true"
 										process="panelLogin"
+										style="margin-left: 35%;"
 										id="btnLogar"
 										oncomplete="handleLoginRequest(xhr, status, args)" />
 								</f:facet>
@@ -272,6 +273,10 @@
 
 					</div>
 				</div>
+			</div>
+			<div align="center">
+				<p:graphicImage library="showMustGoOn/images" name="logo.png"/>
+				<h1>Show Must Go On</h1>
 			</div>
 		</h:form>
 

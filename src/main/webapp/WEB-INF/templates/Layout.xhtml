@@ -11,20 +11,19 @@
 	<h:outputStylesheet library="showMustGoOn" name="css/sweetalert.css" />
 	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
 	<script src="../resources/showMustGoOn/js/sweetalert.min.js"></script>
+	<link rel="shortcut icon" type="image/png" href="../resources/showMustGoOn/images/play_music.ico"/>
 </h:head>
 <h:body styleClass="Bimage">
 
 	<header>
-		<h:outputLabel value="Colocar Imagem aqui."></h:outputLabel>
+		<p:graphicImage library="showMustGoOn/images" name="logo_pequena.png"
+			style="max-width:100%;max-height:100%;display:block;margin-left:auto;margin-right:auto"/>
 	</header>
 	
 	<div id="conteudo">
 		<ui:insert name="corpo" />
 	</div>
-	
-<!-- 	<footer>
-		Show Must Go On
-	</footer> -->
+
 
 </h:body>
 </html>

@@ -1,5 +1,6 @@
 package br.com.showMustGoOn.controller;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,8 +14,12 @@ import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import br.com.showMustGoOn.model.Banda;
+import br.com.showMustGoOn.model.BandaMusicoFuncao;
+import br.com.showMustGoOn.model.Evento;
 import br.com.showMustGoOn.model.Funcao;
 import br.com.showMustGoOn.model.Musico;
 import br.com.showMustGoOn.service.perfilService;
@@ -33,6 +38,10 @@ public class perfilController extends BaseController implements Serializable {
 	private List<Funcao> listaFuncoesSelecionadas;
 	private List<Banda> listaBandas;
 	private Banda bandaExibir;
+	private Evento eventoExibir;
+	private UploadedFile imagemMusico;
+	private List<BandaMusicoFuncao> musicosBanda;
+	private List<Evento> listaEventos;
 
 	@PostConstruct
 	public void init() {
@@ -42,6 +51,7 @@ public class perfilController extends BaseController implements Serializable {
 		if (getMusico() != null) {
 			setListaFuncoesSelecionadas(perfilservice.carregarFuncoesMusico(getMusico().getCodMusico()));
 			setListaFuncoes(perfilservice.listarFuncoes());
+			setListaEventos(perfilservice.listarEventosPorMusico(getMusico().getCodMusico()));
 			setListaBandas(perfilservice.listarBandasMusico(getMusico().getCodMusico()));
 			final String mensagemSucessoCadastroBanda = (String) fc.getExternalContext().getFlash()
 					.get("msgSucessoBanda");
@@ -67,6 +77,25 @@ public class perfilController extends BaseController implements Serializable {
 		adicionarMensagem("Sua Banda foi removida!", FacesMessage.SEVERITY_INFO);
 	}
 
+	public void removerEvento() {
+		final Integer codEvento = Integer.valueOf(
+				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codEvento"));
+		perfilservice.removerEvento(codEvento);
+		setListaEventos(perfilservice.listarEventosPorMusico(getMusico().getCodMusico()));
+		adicionarMensagem("Seu Evento foi removido!", FacesMessage.SEVERITY_INFO);
+	}
+
+	public void fileUpload(FileUploadEvent event) throws IOException {
+		try {
+			getMusico().setImagem(event.getFile().getContents());
+			setImagemMusico(event.getFile());
+			salvar();
+
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	public void salvar() {
 		try {
 			perfilservice.salvarMusico(getMusico());
@@ -86,6 +115,13 @@ public class perfilController extends BaseController implements Serializable {
 		final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		final Integer codBanda = Integer.valueOf(externalContext.getRequestParameterMap().get("codBanda"));
 		setBandaExibir(perfilservice.obterBanda(codBanda));
+		setMusicosBanda(perfilservice.obterMusicosBanda(codBanda));
+	}
+
+	public void setarCodEventoExibicao() {
+		final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		final Integer codEvento = Integer.valueOf(externalContext.getRequestParameterMap().get("codEvento"));
+		setEventoExibir(perfilservice.obterEvento(codEvento));
 	}
 
 	public Musico getMusico() {
@@ -126,6 +162,38 @@ public class perfilController extends BaseController implements Serializable {
 
 	public void setBandaExibir(Banda bandaExibir) {
 		this.bandaExibir = bandaExibir;
+	}
+
+	public UploadedFile getImagemMusico() {
+		return imagemMusico;
+	}
+
+	public void setImagemMusico(UploadedFile imagemMusico) {
+		this.imagemMusico = imagemMusico;
+	}
+
+	public List<BandaMusicoFuncao> getMusicosBanda() {
+		return musicosBanda;
+	}
+
+	public void setMusicosBanda(List<BandaMusicoFuncao> musicosBanda) {
+		this.musicosBanda = musicosBanda;
+	}
+
+	public List<Evento> getListaEventos() {
+		return listaEventos;
+	}
+
+	public void setListaEventos(List<Evento> listaEventos) {
+		this.listaEventos = listaEventos;
+	}
+
+	public Evento getEventoExibir() {
+		return eventoExibir;
+	}
+
+	public void setEventoExibir(Evento eventoExibir) {
+		this.eventoExibir = eventoExibir;
 	}
 
 }

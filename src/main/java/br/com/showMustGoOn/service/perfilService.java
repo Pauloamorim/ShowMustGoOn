@@ -9,11 +9,14 @@ import javax.inject.Inject;
 import org.hibernate.HibernateException;
 
 import br.com.showMustGoOn.model.Banda;
+import br.com.showMustGoOn.model.BandaMusicoFuncao;
+import br.com.showMustGoOn.model.Evento;
 import br.com.showMustGoOn.model.Funcao;
 import br.com.showMustGoOn.model.FuncaoMusico;
 import br.com.showMustGoOn.model.Musico;
 import br.com.showMustGoOn.repository.BandaMusicoFuncaoRepository;
 import br.com.showMustGoOn.repository.BandaRepository;
+import br.com.showMustGoOn.repository.EventoRepository;
 import br.com.showMustGoOn.repository.FuncaoMusicoRepository;
 import br.com.showMustGoOn.repository.FuncoesRepository;
 import br.com.showMustGoOn.repository.Musicos;
@@ -32,6 +35,9 @@ public class perfilService implements Serializable {
 	private BandaMusicoFuncaoRepository bandaMusicoFuncaoRepository;
 	@Inject
 	private BandaRepository bandaRepository;
+
+	@Inject
+	private EventoRepository eventoRepository;
 
 	public Musico obterMusico(String email) {
 		return musicosRepository.obterMusicoPorEmail(email, null);
@@ -96,6 +102,32 @@ public class perfilService implements Serializable {
 
 	public Banda obterBanda(Integer codBanda) {
 		return bandaRepository.porId(codBanda);
+	}
+
+	public byte[] obterImagemMusico(Integer codMusico) {
+		return musicosRepository.porId(codMusico).getImagem();
+	}
+
+	public List<BandaMusicoFuncao> obterMusicosBanda(Integer codBanda) {
+		return bandaMusicoFuncaoRepository.listarMusicosBanda(codBanda);
+	}
+
+	public List<Evento> listarEventosPorMusico(Integer codMusico) {
+		return eventoRepository.listarEventosPorMusico(codMusico);
+	}
+
+	@Transacional
+	public void removerEvento(Integer codEvento) {
+		final Evento ev = eventoRepository.porId(codEvento);
+		eventoRepository.remove(ev);
+	}
+
+	public byte[] obterImagemEvento(Integer codMu) {
+		return eventoRepository.obterImagemBanda(codMu);
+	}
+
+	public Evento obterEvento(Integer codEvento) {
+		return eventoRepository.porId(codEvento);
 	}
 
 }

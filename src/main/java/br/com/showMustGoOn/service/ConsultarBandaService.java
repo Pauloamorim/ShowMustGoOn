@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import br.com.showMustGoOn.DTO.BandaDTO;
 import br.com.showMustGoOn.model.Banda;
+import br.com.showMustGoOn.model.BandaMusicoFuncao;
 import br.com.showMustGoOn.model.Cidade;
 import br.com.showMustGoOn.model.Estado;
 import br.com.showMustGoOn.model.Musico;
@@ -48,6 +49,10 @@ public class ConsultarBandaService implements Serializable {
 
 	public List<Banda> pesquisar(BandaDTO dto) {
 		return bandaMusicoFuncaoRepository.pesquisarBandas(dto);
+	}
+
+	public List<BandaMusicoFuncao> obterMusicosBanda(Integer codBanda) {
+		return bandaMusicoFuncaoRepository.listarMusicosBanda(codBanda);
 	}
 
 }

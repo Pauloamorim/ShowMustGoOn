@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:showMustGoOn="http://java.sun.com/jsf/composite/showMustGoOn/components">
+	
+	
+	<ui:define name="corpo">
+
+ 		<f:metadata>
+			<f:viewAction  action="#{consultarEventosController.verificarLogado}" />
+		</f:metadata>
+		
+		<showMustGoOn:menu />
+		<p:outputPanel id="panelExibirEvento">
+			<showMustGoOn:exibirEvento  evento="#{consultarEventosController.eventoExibir}"/>
+		</p:outputPanel>		
+		<h:form id="frm">
+			<p:messages id="msgs" />
+			
+
+			<div align="center" style="width: 100%">
+				<h1>Consultar Eventos</h1>
+			</div>
+
+			<div class="ui-fluid">
+				<p:panel id="panel" header="Filtros Pesquisa" style="margin-left:10%;margin-bottom:10px;width:80%;align:center;">
+					<p:panelGrid columns="3" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:inputText
+							value="#{consultarEventosController.dto.nome}"
+							placeholder="Nome Evento"
+							size="100"/>
+					</p:panelGrid>
+					<p:panelGrid columns="3" columnClasses="ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:calendar value="#{consultarEventosController.dto.data}"
+							effect="fold"
+							mask="99/99/9999"
+							pattern="dd/MM/yyyy"
+							navigator="true"
+							placeholder="Data Evento"
+							yearRange="c:c+5"
+							size="180"
+							id="dataFundacao"/>
+						<p:calendar value="#{consultarEventosController.dto.horaInicio}"
+							effect="fold"
+							mask="99:99"
+							timeOnly="true"
+							pattern="HH:mm"
+							navigator="true"
+							placeholder="Hora Início Evento"
+							/>
+						<p:calendar value="#{consultarEventosController.dto.horaFim}"
+							effect="fold"
+							mask="99:99"
+							pattern="HH:mm"
+							size="20"
+							navigator="true"
+							placeholder="Hora Fim Evento"
+							/>
+					</p:panelGrid>
+					<p:panelGrid columns="3" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:inputText
+							value="#{consultarEventosController.dto.endereco}"
+							placeholder="Endereço Evento"
+							size="100"/>
+					</p:panelGrid>
+					<p:panelGrid columns="3" columnClasses="ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+						<p:inputTextarea
+							value="#{consultarEventosController.dto.descricao}"
+							placeholder="Descrição Evento"
+							size="100"/>
+					</p:panelGrid>
+				<p:panelGrid columns="3" columnClasses="ui-grid-col-5" layout="grid" style="margin-top:15px;" >
+					<p:commandButton 
+						actionListener="#{consultarEventosController.pesquisar}" 
+						value="Pesquisar"
+						id="botaoPesquisar" 
+						update="msgs divTabela"
+						icon="ui-icon-search" 
+						title="Pesquisar" />
+					<p:commandButton 
+						value="Limpar Filtros"
+						id="botaoLimpar"
+						actionListener="#{consultarEventosController.limparFiltros}"
+						update="panel divTabela"
+						partialSubmit="true"
+						process="@this" 
+						icon="ui-icon-trash" 
+						title="Limpar Filtros" >
+					</p:commandButton>
+					<p:commandButton 
+						value="Limpar Resultados"
+						id="botaoLimparGrid"
+						actionListener="#{consultarEventosController.limparGridResultados}"
+						update="divTabela"
+						process="@this" 
+						icon="ui-icon-trash" 
+						title="Limpar resultados retornados pela pesquisa" />
+				</p:panelGrid>
+				
+					<p:outputPanel id="divTabela">	
+					<p:outputPanel rendered="#{not empty consultarEventosController.listaEventos}">
+						<p:dataTable value="#{consultarEventosController.listaEventos}" var="evento"
+								emptyMessage="Nenhum evento encontrado." rows="10" 
+								paginator="true" paginatorPosition="bottom"
+								style="margin-top: 50px" id="evento-table">
+
+
+								<p:column headerText="Exibir Dados Evento" width="15%">
+									<p:commandLink
+										action="#{consultarEventosController.setarCodEventoExibicao}"
+										immediate="true" process="@this" ajax="true"
+										update=":panelExibirEvento frm:msgs" id="iconView"
+										oncomplete="PF('dadosEvento').show();">
+										<f:param name="codEvento" value="#{evento.id}" />
+										<p:graphicImage name="showMustGoOn/images/view.png" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="Nome" sortBy="#{evento.nome}">
+								<h:outputText value="#{evento.nome}" style="text-align: center !important;" />
+							</p:column>
+							<p:column headerText="Data Evento" sortBy="#{evento.data}">
+								<h:outputText value="#{evento.dataFormatada}" />
+							</p:column>
+							<p:column headerText="Hora Início Evento" sortBy="#{evento.horaInicio}">
+								<h:outputText value="#{evento.horaInicioFormatada}" />
+							</p:column>
+							<p:column headerText="Descrição Evento" sortBy="#{evento.descricao}">
+								<h:outputText value="#{evento.descricao}" />
+							</p:column>														
+						</p:dataTable>
+					</p:outputPanel>
+				</p:outputPanel>
+									
+				</p:panel>
+			</div>
+		
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

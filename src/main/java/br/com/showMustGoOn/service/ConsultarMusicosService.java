@@ -19,36 +19,40 @@ import br.com.showMustGoOn.repository.Musicos;
 public class ConsultarMusicosService implements Serializable {
 
 	private static final long serialVersionUID = -258261831807595909L;
-	
+
 	@Inject
 	private Musicos repositoryMusicos;
 	@Inject
 	private Estados repositoryEstados;
 	@Inject
-	private CidadesRepository repositoryCidades; 
+	private CidadesRepository repositoryCidades;
 	@Inject
-	private FuncoesRepository repositoryFuncoes; 
+	private FuncoesRepository repositoryFuncoes;
 	@Inject
 	private FuncaoMusicoRepository repositoryFuncaoMusicoRepository;
-	
-	
-	public List<Musico> listarMusicos(MusicoDTO musicoDTO){
+
+	public List<Musico> listarMusicos(MusicoDTO musicoDTO) {
 		return repositoryFuncaoMusicoRepository.listarMusicos(musicoDTO);
 	}
-
 
 	public List<Estado> listarEstados() {
 		return repositoryEstados.todas();
 	}
 
-
 	public List<Cidade> listarCidadesPorEstado(Integer codEstado, String cidade) {
-		return repositoryCidades.listarCidadesPorEstado(codEstado,cidade);
+		return repositoryCidades.listarCidadesPorEstado(codEstado, cidade);
 	}
-
 
 	public List<Funcao> listarFuncoes() {
 		return repositoryFuncoes.todas();
 	}
-	
+
+	public Musico obterMusico(Integer codMusico) {
+		return repositoryMusicos.porId(codMusico);
+	}
+
+	public List<Funcao> listarFuncoesPorMusico(Integer codMusico) {
+		return repositoryFuncaoMusicoRepository.carregarFuncoesMusico(codMusico);
+	}
+
 }

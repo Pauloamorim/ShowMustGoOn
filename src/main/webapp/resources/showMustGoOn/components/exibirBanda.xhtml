@@ -7,18 +7,23 @@
     
     <composite:interface>
     	<composite:attribute name="banda" required="true"/>
+    	<composite:attribute name="musicos" required="true"/>
     </composite:interface>
 	
     <composite:implementation>
 	
 	<h:form>
-		<p:dialog header="Dados Banda" widgetVar="dadosBanda" resizable="false" width="900" height="500">
-			<p:scrollPanel style="height:800px;width:860px;">  
+		<p:dialog header="Dados Banda" widgetVar="dadosBanda" resizable="false" width="900" height="600">
+			<p:scrollPanel style="height:1300px;width:860px;">  
 			<h:panelGrid columns="3" cellpadding="5" width="100%" >
 				<c:if test="#{cc.attrs.banda != null}">
-	            <p:graphicImage value="#{imagemController.obterImagemBanda}" style="display: block;margin-left: auto;margin-right: auto;">
-            	 	<f:param name="codBanda" value="#{cc.attrs.banda.codBanda}" />
-            	</p:graphicImage>
+				<p:outputPanel style="width:250px;height:250px;display: block;margin-left: auto;margin-right: auto;">
+		            <p:graphicImage value="#{imagemController.obterImagemBanda}" cache="false" 
+		            	style="display: max-width: 100%;max-height: 100%;">
+	            	 	<f:param name="codBanda" value="#{cc.attrs.banda.codBanda}" />
+	            	 	<f:param name="entity" value="banda" />
+	            	</p:graphicImage>
+            	</p:outputPanel>
             	</c:if>
 			</h:panelGrid>
 			<h:panelGrid columns="3" cellpadding="5" width="100%">
@@ -29,64 +34,75 @@
 			<div align="center">
 			<div class="ui-grid ui-grid-responsive" >
     			<div class="ui-grid-row" >
-        			<div class="ui-grid-col-2">
+        			<div class="ui-grid-col-12">
         				<p:outputLabel value="Data Fundação: "/>
-        			</div>
-        			<div class="ui-grid-col-7">
         				<p:outputLabel value="#{cc.attrs.banda.dataFundacaoFormatado}"/>
         			</div>
 				</div>
 				<c:if test="#{cc.attrs.banda.facebook != null and cc.attrs.banda.facebook != ''}">
 					<div class="ui-grid-row">
-	        			<div class="ui-grid-col-2">
+	        			<div class="ui-grid-col-12">
 	        				<p:outputLabel value="Facebook: "/>
-	        			</div>
-	        			<div class="ui-grid-col-7">
-	        				<p:commandLink value="#{cc.attrs.banda.facebook}"/>
+	        				<p:commandLink  value="#{cc.attrs.banda.facebook}"/>
 	        			</div>
 					</div>
 				</c:if>
 				<c:if test="#{cc.attrs.banda.twitter != null and cc.attrs.banda.twitter != ''}">
 					<div class="ui-grid-row">
-	        			<div class="ui-grid-col-2">
+	        			<div class="ui-grid-col-12">
 	        				<p:outputLabel value="Twitter: "/>
-	        			</div>
-	        			<div class="ui-grid-col-7">
 	        				<p:commandLink value="#{cc.attrs.banda.twitter}"/>
 	        			</div>
 					</div>
 				</c:if>
 				<c:if test="#{cc.attrs.banda.emailContato != null and cc.attrs.banda.emailContato != ''}">
 					<div class="ui-grid-row">
-	        			<div class="ui-grid-col-2">
+	        			<div class="ui-grid-col-12">
 	        				<p:outputLabel value="Email Contato: "/>
-	        			</div>
-	        			<div class="ui-grid-col-7">
-	        				<p:commandLink value="#{cc.attrs.banda.emailContato}"/>
+	        				<p:outputLabel value="#{cc.attrs.banda.emailContato}"/>
 	        			</div>
 					</div>
 				</c:if>
 				<c:if test="#{cc.attrs.banda.telefoneContato != null and cc.attrs.banda.telefoneContato != ''}">
 					<div class="ui-grid-row">
-	        			<div class="ui-grid-col-2">
+	        			<div class="ui-grid-col-12">
 	        				<p:outputLabel value="Telefone Contato: "/>
-	        			</div>
-	        			<div class="ui-grid-col-7">
-	        				<p:commandLink value="#{cc.attrs.banda.telefoneContato}"/>
+	        				<p:outputLabel value="#{cc.attrs.banda.telefoneContato}"/>
 	        			</div>
 					</div>
 				</c:if>
+				<div class="ui-grid-row" style="margin-top: 10px;">
+        			<div class="ui-grid-col-12">
+      					<p:outputLabel value="Musicos Banda: "/>
+      					<p:dataTable value="#{cc.attrs.musicos}"
+								paginator="true" paginatorPosition="top"
+								emptyMessage="Nenhum Registro encontrado"
+								rows="5" var="func">
+								<p:column headerText="Musico">
+									<p:outputLabel value="#{func.musico.nomeSobrenome}"/>
+								</p:column>
+								<p:column headerText="Cidade">
+									<p:outputLabel value="#{func.musico.cidade.nome}"/>
+								</p:column>
+								<p:column headerText="Estado">
+									<p:outputLabel value="#{func.musico.estado.nome}"/>
+								</p:column>
+								<p:column headerText="Função">
+									<p:outputLabel value="#{func.funcao.descricaoFuncao}"/>
+								</p:column>
+						</p:dataTable>
+      				</div>
+				</div>
 				<c:if test="#{cc.attrs.banda.descricaoBanda != null and cc.attrs.banda.descricaoBanda != ''}">
-					<div class="ui-grid-row">
-	        			<div class="ui-grid-col-10">
-		        			<div class="ui-grid-col-2">
+					<div class="ui-grid-row" style="margin-top: 10px;">
+		        			<div class="ui-grid-col-12">
 	        					<p:outputLabel value="Sobre a Banda: "/>
+	        					<p:editor disabled="true" value="#{cc.attrs.banda.descricaoBanda}" 
+	        						controls=""/>
 	        				</div>
-	        				<p:editor disabled="true" value="#{cc.attrs.banda.descricaoBanda}" style="margin-left:20%;"
-	        					controls=""/>
-	        			</div>
 					</div>
 				</c:if>
+
 			</div>
 			</div>
 			</p:scrollPanel>

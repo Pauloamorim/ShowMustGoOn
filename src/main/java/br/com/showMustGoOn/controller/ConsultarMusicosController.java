@@ -33,7 +33,9 @@ public class ConsultarMusicosController extends BaseController implements Serial
 	private List<Musico> listaMusicos;
 	private final SexoEnum[] listaSexo = SexoEnum.values();
 	private List<Funcao> listaFuncoes;
+	private Musico musicoExibicao;
 	private MusicoDTO dto;
+	private List<Funcao> listaFuncoesMusicoExibicao;
 
 	@PostConstruct
 	public void init() {
@@ -93,6 +95,13 @@ public class ConsultarMusicosController extends BaseController implements Serial
 		setDto(new MusicoDTO());
 	}
 
+	public void alterarMusicoExibicao() {
+		final Integer codMusico = Integer.valueOf(
+				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codMusico"));
+		setMusicoExibicao(servico.obterMusico(codMusico));
+		setListaFuncoesMusicoExibicao(servico.listarFuncoesPorMusico(codMusico));
+	}
+
 	/////////////////////////////////////////////////
 	/////////////// GETTERS AND SETTERS///////////////
 	/////////////////////////////////////////////////
@@ -131,6 +140,22 @@ public class ConsultarMusicosController extends BaseController implements Serial
 
 	public void setListaFuncoes(List<Funcao> listaFuncoes) {
 		this.listaFuncoes = listaFuncoes;
+	}
+
+	public Musico getMusicoExibicao() {
+		return musicoExibicao;
+	}
+
+	public void setMusicoExibicao(Musico musicoExibicao) {
+		this.musicoExibicao = musicoExibicao;
+	}
+
+	public List<Funcao> getListaFuncoesMusicoExibicao() {
+		return listaFuncoesMusicoExibicao;
+	}
+
+	public void setListaFuncoesMusicoExibicao(List<Funcao> listaFuncoesMusicoExibicao) {
+		this.listaFuncoesMusicoExibicao = listaFuncoesMusicoExibicao;
 	}
 
 }

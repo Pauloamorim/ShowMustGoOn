@@ -93,4 +93,13 @@ public class BandaMusicoFuncaoRepository implements Serializable {
 		return criteria.list();
 	}
 
+	public List<BandaMusicoFuncao> listarMusicosBanda(Integer codBanda) {
+		final Session session = manager.unwrap(Session.class);
+		final Criteria criteria = session.createCriteria(BandaMusicoFuncao.class);
+		criteria.createAlias("banda", "banda");
+		criteria.createAlias("musico", "musico");
+		criteria.add(Restrictions.eq("banda.codBanda", codBanda));
+		return criteria.list();
+	}
+
 }

@@ -56,6 +56,14 @@ h1 {
 	font-weight: bold;
 	font-size: 20pt;
 }
+h1 {
+	font-weight: 500;
+	padding: 0px;
+	margin: 0px;
+	margin-bottom: 10px;
+	font-family: 'Poiret One', cursive;
+	font-weight: bold;
+}
 
 .delta10{
 	margin-top: 10px;

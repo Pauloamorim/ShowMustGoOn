@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.com.showMustGoOn.DTO.BandaDTO;
 import br.com.showMustGoOn.model.Banda;
+import br.com.showMustGoOn.model.BandaMusicoFuncao;
 import br.com.showMustGoOn.model.Cidade;
 import br.com.showMustGoOn.model.Estado;
 import br.com.showMustGoOn.model.Musico;
@@ -33,6 +34,7 @@ public class ConsultarBandasController extends BaseController implements Seriali
 	private BandaDTO dto;
 	private List<Banda> listaBanda;
 	private Banda bandaExibir;
+	private List<BandaMusicoFuncao> musicosBanda;
 
 	@PostConstruct
 	public void init() {
@@ -92,6 +94,7 @@ public class ConsultarBandasController extends BaseController implements Seriali
 		final ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		final Integer codBanda = Integer.valueOf(externalContext.getRequestParameterMap().get("codBanda"));
 		setBandaExibir(servico.obterBanda(codBanda));
+		setMusicosBanda(servico.obterMusicosBanda(codBanda));
 	}
 
 	/////////////////////////////////////////////////
@@ -128,6 +131,14 @@ public class ConsultarBandasController extends BaseController implements Seriali
 
 	public void setBandaExibir(Banda bandaExibir) {
 		this.bandaExibir = bandaExibir;
+	}
+
+	public List<BandaMusicoFuncao> getMusicosBanda() {
+		return musicosBanda;
+	}
+
+	public void setMusicosBanda(List<BandaMusicoFuncao> musicosBanda) {
+		this.musicosBanda = musicosBanda;
 	}
 
 }

@@ -143,14 +143,25 @@
 							style="margin-top: 50px" id="musicos-table">
 							
 						<p:column headerText="Exibir Perfil" width="5%" >
-							<p:graphicImage library="showMustGoOn/images" name="musico.png" style="center;"/>
+									<p:commandButton icon="fa fa-male" rendered="#{musico.sexo.chave == 'M'}" 
+										oncomplete="PF('popUpMusico').show();" 
+										actionListener="#{consultarMusicosController.alterarMusicoExibicao}" 
+										update="frm:panelPopUp">
+										<f:param name="codMusico" value="#{musico.codMusico}"/>
+									</p:commandButton>
+									<p:commandButton icon="fa fa-female" rendered="#{musico.sexo.chave == 'F'}" 
+										oncomplete="PF('popUpMusico').show();" 
+										actionListener="#{consultarMusicosController.alterarMusicoExibicao}" 
+										update="frm:panelPopUp">
+										<f:param name="codMusico" value="#{musico.codMusico}"/>
+									</p:commandButton>
 						</p:column>
 							
 						<p:column headerText="Nome" sortBy="#{musico.nome}">
-							<h:outputText value="#{musico.nome}" style="text-align: center !important;" />
+							<h:outputText value="#{musico.nome} #{musico.sobrenome}" style="text-align: center !important;" />
 						</p:column>
-						<p:column headerText="Sobrenome" sortBy="#{musico.sobrenome}">
-							<h:outputText value="#{musico.sobrenome}" />
+						<p:column headerText="Cidade" sortBy="#{musico.cidade.nome}">
+							<h:outputText value="#{musico.cidade.nome}" />
 						</p:column>
 						<p:column headerText="Estado" sortBy="#{musico.estado.nome}">
 							<h:outputText value="#{musico.estado.nome}" style="align:center;"/>
@@ -158,14 +169,86 @@
 					</p:dataTable>
 				</p:outputPanel>
 			</p:outputPanel>
-			
-			<div style="width: 100%" align="center">
-				<p:commandButton value="Voltar" ajax="false" action="principal.xhtml?faces-redirect=true" style="width:70px"/>
-			</div>
-			
 			</p:panel>
 			</div>
-		
+		<p:outputPanel id="panelPopUp">
+			<p:dialog resizable="false" header="Dados Músico" id="popUp"  widgetVar="popUpMusico" width="550" height="500" rendered="#{consultarMusicosController.musicoExibicao != null}">
+				<p:scrollPanel style="height:790px;width:520px;">
+					<div class="ui-grid ui-grid-responsive">
+				    <div class="ui-grid-row">
+				        <div class="ui-grid-col-12" style="width:200px;height:300px;display: block;margin-left: auto;margin-right: auto;">
+					        <p:graphicImage value="#{imagemController.obterImagemBanda}" cache="false" style="display: block;margin-left: auto;margin-right: auto;max-width: 100%;max-height: 100%;">
+			            	 	<f:param name="codMusico" value="#{consultarMusicosController.musicoExibicao.codMusico}" />
+			            	 	<f:param name="entity" value="musico" />
+			            	</p:graphicImage>
+	            		</div>
+	            	</div>
+	            	<div class="ui-grid-row">
+				        <div class="ui-grid-col-12">
+				        	<h1 style="text-align:center">
+				        		<p:outputLabel value="#{consultarMusicosController.musicoExibicao.nomeSobrenome}"/>
+				        	</h1>
+				        </div>
+				    </div>
+				    <div class="ui-grid-row">
+				        <div class="ui-grid-col-12">
+				        	<h4 style="text-align:center">
+				        		<p:outputLabel value="Email para contato: "/>
+				        		<p:outputLabel value="#{consultarMusicosController.musicoExibicao.email}"/>
+				        	</h4>
+				        </div>
+				    </div>
+				    <p:outputPanel rendered="#{consultarMusicosController.musicoExibicao.telefone1 != ''}">
+					    <div class="ui-grid-row">
+					        <div class="ui-grid-col-12">			    
+					        	<h4 style="text-align:center">
+					        		<p:outputLabel value="Telefone para contato: "/>
+					        		<p:outputLabel value="#{consultarMusicosController.musicoExibicao.telefone1}"/>
+					        	</h4>
+					       	</div>
+					    </div>
+				    </p:outputPanel>
+				    <p:outputPanel rendered="#{consultarMusicosController.musicoExibicao.telefone2 != ''}">
+					    <div class="ui-grid-row">
+					        <div class="ui-grid-col-12">			        	
+					        	<h4 style="text-align:center">
+					        		<p:outputLabel value="Telefone para contato: "/>
+					        		<p:outputLabel value="#{consultarMusicosController.musicoExibicao.telefone2}"/>
+					        	</h4>
+					        </div>
+					    </div>
+				    </p:outputPanel>
+				    <div class="ui-grid-row">
+				        <div class="ui-grid-col-12">			        	
+				        	<h4 style="text-align:center">
+				        		<p:outputLabel value="Cidade: "/>
+				        		<p:outputLabel value="#{consultarMusicosController.musicoExibicao.cidade.nome}"/>
+				        	</h4>
+				        </div>
+				    </div>
+					<div class="ui-grid-row">
+				        <div class="ui-grid-col-12">			        	
+				        	<h4 style="text-align:center">
+				        		<p:outputLabel value="Estado: "/>
+				        		<p:outputLabel value="#{consultarMusicosController.musicoExibicao.estado.nome}"/>
+				        	</h4>
+				        </div>
+				    </div>
+				    <div class="ui-grid-row">
+				        <div class="ui-grid-col-12">			        	
+							<p:dataTable value="#{consultarMusicosController.listaFuncoesMusicoExibicao}"
+								paginator="true" paginatorPosition="top"
+								rows="5" var="func">
+								<p:column headerText="Conhecimentos">
+									<p:outputLabel value="#{func.descricaoFuncao}"/>
+								</p:column>
+							</p:dataTable>
+				        </div>
+				    </div>
+				</div>
+			</p:scrollPanel>
+			</p:dialog>
+		</p:outputPanel>
 		</h:form>
 		
 	</ui:define>

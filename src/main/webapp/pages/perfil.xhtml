@@ -18,12 +18,37 @@
 
 		<h1 align="center">Meu Perfil</h1>
 		<p:outputPanel id="panelExibirBanda">
-			<showMustGoOn:exibirBanda  banda="#{perfilController.bandaExibir}"></showMustGoOn:exibirBanda>
+			<showMustGoOn:exibirBanda  banda="#{perfilController.bandaExibir}"
+				musicos="#{perfilController.musicosBanda}"/>
 		</p:outputPanel>
-		<h:form id="form">
+		<p:outputPanel id="panelExibirEvento">
+			<showMustGoOn:exibirEvento  evento="#{perfilController.eventoExibir}"/>
+		</p:outputPanel>
+		<h:form id="form" enctype="multipart/form-data">
 			<p:messages id="msgs" closable="true"/>
 			<p:tabView orientation="left" id="tab">
 				<p:tab title="Dados Básicos" >
+
+					<div style="width:200px">
+						<p:graphicImage value="#{imagemController.obterImagemBanda}" id="imgMusico" cache="false" 
+						style="max-width: 100%;max-height: 100%;">
+			            	 <f:param name="codMusico" value="#{perfilController.musico.codMusico}" />
+			            	 <f:param name="entity" value="musico" />
+			            </p:graphicImage>
+					</div>
+				
+					<h:panelGrid columns="2" cellpadding="10">
+					<p:fileUpload 
+						immediate="true"
+						value="#{perfilController.imagemMusico}"
+						fileUploadListener="#{perfilController.fileUpload}" 
+						label="Alterar Foto" 
+						auto="true" 
+						update="imgMusico"
+						allowTypes="/(\.|\/)(jpg|png)$/" 
+						invalidFileMessage="A imagem tem que estar no formato JPG ou PNG"
+						skinSimple="true"/>
+					</h:panelGrid>
 					<h:panelGrid columns="2" cellpadding="10">
 						
 						
@@ -244,15 +269,27 @@
 				</p:tab>
 				<p:tab title="Minhas Bandas" id="minhasBandas">
 				
-					<p:dataScroller value="#{perfilController.listaBandas}" var="banda" id="tableBandas" chunkSize="10">
+					<div align="center" style="margin-top:15px;">			
+						<p:commandButton value="Criar minha banda." 
+							process="@this"
+							immediate="true"
+							action="cadastrarBanda.xhtml?faces-redirect=true" 
+							style="width:300px;font-weight: bolder;font-size: medium;margin-bottom: 15px"/>
+					</div>				
+				
+					<p:dataScroller value="#{perfilController.listaBandas}" var="banda" id="tableBandas" chunkSize="6">
 				        <f:facet name="header">
 				            Minhas Bandas
 				        </f:facet>
 				 
-				        <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail" >
-	 				            <p:graphicImage value="#{imagemController.obterImagemBanda}" >
+				        <h:panelGrid columns="5" style="width:100%" columnClasses="logo,detail" >
+				        	<p:outputPanel style="height:250px;width:250px;">
+	 				            <p:graphicImage value="#{imagemController.obterImagemBanda}"  
+	 				            cache="false" style="max-width: 100%;max-height: 100%;">
 					            	 <f:param name="codBanda" value="#{banda.codBanda}" />
+					            	 <f:param name="entity" value="banda" />
 					            </p:graphicImage>
+					        </p:outputPanel>
 					        <p:outputPanel>
 				                <h:panelGrid columns="2" cellpadding="5">
 				                    <h:outputText value="Nome:" />
@@ -295,13 +332,84 @@
 				        </h:panelGrid>
 					 
 					    </p:dataScroller>
-								
-					<p:commandButton value="Criar minha banda." 
-						process="@this"
-						immediate="true"
-						action="cadastrarBanda.xhtml?faces-redirect=true" 
-						style="width:300px"/>
-				
+				</p:tab>
+				<p:tab title="Meus Eventos">
+					<div align="center" style="margin-top:15px;">			
+						<p:commandButton value="Criar evento." 
+							process="@this"
+							icon="fa fa-plus-square"
+							immediate="true"
+							action="cadastrarEvento.xhtml?faces-redirect=true" 
+							style="width:300px;font-weight: bolder;font-size: medium;margin-bottom:15px;"/>
+					</div>
+					<p:dataScroller value="#{perfilController.listaEventos}" var="eve" id="tableEventos" chunkSize="6">
+				        <f:facet name="header">
+				            Meus Eventos
+				        </f:facet>
+				        
+				        <h:panelGrid columns="5" style="width:100%" columnClasses="logo,detail" >
+				            <p:outputPanel style="height:250px;width:250px;">
+				            <p:graphicImage value="#{imagemController.obterImagemBanda}" cache="false" 
+				            	style="display: block;margin-left: auto;margin-right: auto;max-width: 100%;max-height: 100%;">
+			            	 	<f:param name="codEvento" value="#{eve.id}" />
+			            	 	<f:param name="entity" value="evento" />
+			            	</p:graphicImage>
+			            	</p:outputPanel>
+				 
+					        <p:outputPanel>
+				                <h:panelGrid columns="2" cellpadding="5">
+				                    <h:outputText value="Nome:" />
+				                    <h:outputText value="#{eve.nome}" style="font-weight: bold"/>
+				              		<h:outputText value="Data Evento:" />
+				                    <h:outputText value="#{eve.dataFormatada}" style="font-weight: bold"/>
+				               		<h:outputText value="Hora Início:" />
+				                    <h:outputText value="#{eve.horaInicioFormatada}" style="font-weight: bold"/>
+			                    	<h:outputText value="Hora Fim:" rendered="#{eve.horaFim ne null}" />
+				                    <h:outputText value="#{eve.horaFimFormatada}" style="font-weight: bold" rendered="#{eve.horaFim ne null}" />
+				                </h:panelGrid>
+				             </p:outputPanel>
+				             <p:outputPanel>
+								<h:panelGrid columns="2" cellpadding="5">
+									<h:outputText value="Descrição Evento:" />
+				                    <h:outputText value="#{eve.descricao}" style="font-weight: bold"/>
+								</h:panelGrid>				                
+				            </p:outputPanel>
+				            <p:outputPanel>
+				                <h:panelGrid columns="6" cellpadding="5">
+								</h:panelGrid>
+				            </p:outputPanel>
+				            <p:outputPanel>
+				                <h:panelGrid columns="6" cellpadding="5">
+				                
+									<p:commandLink action="#{perfilController.setarCodEventoExibicao}" 
+										immediate="true" process="@this" ajax="true" update=" form:msgs :panelExibirEvento"  id="iconView" oncomplete="PF('dadosEvento').show();" >
+											<f:param name="codEvento" value="#{eve.id}"/>
+											<p:graphicImage  name="showMustGoOn/images/view.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipView" for="iconView" value="Exibir todos dados do Evento"
+              						 showEffect="clip" hideEffect="explode" />
+              						 
+              						 
+									<p:commandLink action="cadastrarEvento.xhtml?faces-redirect?true"  
+										id="iconUpdate" immediate="true" process="@this">
+											<f:param name="codEvento" value="#{eve.id}"/>
+											<p:graphicImage  name="showMustGoOn/images/update.png" />
+									</p:commandLink>
+									 <p:tooltip id="toolTipAlter" for="iconUpdate" value="Alterar dados do Evento"
+              						 showEffect="clip" hideEffect="explode" />
+              						 
+              						 
+									<p:commandLink onclick="if(!confirm('Deseja Excluir este Evento?'))return false" update="form:msgs tableEventos"
+										 actionListener="#{perfilController.removerEvento}"  immediate="true" id="iconRemove" >
+											<f:param name="codEvento" value="#{eve.id}"/>
+											<p:graphicImage  name="showMustGoOn/images/remove.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipRemove" for="iconRemove" value="Excluir Evento"
+              						 showEffect="clip" hideEffect="explode" />
+				                </h:panelGrid>
+				            </p:outputPanel>
+				        </h:panelGrid>
+					</p:dataScroller>
 				</p:tab>
 			</p:tabView>
 		</h:form>

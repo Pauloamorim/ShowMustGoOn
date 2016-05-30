@@ -27,15 +27,42 @@ public class ImagemController {
 		if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
 			return new DefaultStreamedContent();
 		} else {
-			final Object cod = context.getExternalContext().getRequestParameterMap().get("codBanda");
-			if (cod != null) {
-				final Integer codBanda = Integer.valueOf(cod.toString());
-				final byte[] imagem = perfilservice.obterImagemBanda(codBanda);
-				if (imagem != null) {
-					return new DefaultStreamedContent(new ByteArrayInputStream(imagem));
+			switch (context.getExternalContext().getRequestParameterMap().get("entity")) {
+			case "banda":
+				final Object cod = context.getExternalContext().getRequestParameterMap().get("codBanda");
+				if (cod != null) {
+					final Integer codBanda = Integer.valueOf(cod.toString());
+					final byte[] imagem = perfilservice.obterImagemBanda(codBanda);
+					if (imagem != null) {
+						return new DefaultStreamedContent(new ByteArrayInputStream(imagem));
+					}
 				}
+				return new DefaultStreamedContent();
+			case "musico":
+				final Object codMusico = context.getExternalContext().getRequestParameterMap().get("codMusico");
+				if (codMusico != null) {
+					final Integer codMu = Integer.valueOf(codMusico.toString());
+					final byte[] imagem = perfilservice.obterImagemMusico(codMu);
+					if (imagem != null) {
+						return new DefaultStreamedContent(new ByteArrayInputStream(imagem));
+					}
+				}
+				return new DefaultStreamedContent();
+			case "evento":
+				final Object codEvento = context.getExternalContext().getRequestParameterMap().get("codEvento");
+				if (codEvento != null) {
+					final Integer codMu = Integer.valueOf(codEvento.toString());
+					final byte[] imagem = perfilservice.obterImagemEvento(codMu);
+					if (imagem != null) {
+						return new DefaultStreamedContent(new ByteArrayInputStream(imagem));
+					}
+				}
+				return new DefaultStreamedContent();
+
+			default:
+				return new DefaultStreamedContent();
 			}
-			return new DefaultStreamedContent();
+
 		}
 	}
 
